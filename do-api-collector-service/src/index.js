@@ -16,10 +16,6 @@ springCloudConfigClient.load({
     profiles: [ambiente] })
   .then(config => {
     require("./routes")(app, config);
-    // const consume = require("./config/kafka-consumer")(config, require("./listener/listener-model"));
-    // consume().catch((err) => {
-    //     console.error("error in consumer: ", err)
-    // })
     app.listen(port, () =>
         console.log(`App working at http://localhost:${port}`)
     );

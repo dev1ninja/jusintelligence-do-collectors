@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.993.0",
+    "aws-sdk": "^2.996.0",
     "axios": "^0.21.4",
     "axios-cookiejar-support": "^2.0.0",
     "axios-middleware": "^0.3.1",
@@ -32,7 +32,8 @@
     "request-promise-native": "^1.0.9",
     "tough": "^0.6.0",
     "tough-cookie-file-store": "^2.0.2",
-    "util": "^0.12.4"
+    "util": "^0.12.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

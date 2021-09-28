@@ -14,11 +14,12 @@ springCloudConfigClient.load({
     auth: { user: "root", pass: "s3cr3t"},
     profiles: [ambiente] })
   .then(config => {
-    require("./routes")(app, config);
-    const consume = require("./config/kafka-consumer")(config, require("./listener/listener-search-url"));
-    consume().catch((err) => {
-        console.error("error in consumer: ", err)
-    })
+    // require("./routes")(app, config);
+    // const consume = require("./config/kafka-consumer")(config, require("./listener/listener-search-url"));
+    // consume().catch((err) => {
+    //     console.error("error in consumer: ", err)
+    // })
+    require("./listener/listener-search-url")(config, '{"search": "something", "date_ini": "YYYY-MM-DD", "date_end": "YYYY-MM-DD"}')
     app.listen(port, () =>
         console.log(`App working at http://localhost:${port}`)
     );

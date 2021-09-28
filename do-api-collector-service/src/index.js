@@ -15,7 +15,7 @@ springCloudConfigClient.load({
     auth: { user: "root", pass: "s3cr3t"},
     profiles: [ambiente] })
   .then(config => {
-    require("./routes")(app, config);
+    require("./routes")(app, config, ambiente);
     app.listen(port, () =>
         console.log(`App working at http://localhost:${port}`)
     );

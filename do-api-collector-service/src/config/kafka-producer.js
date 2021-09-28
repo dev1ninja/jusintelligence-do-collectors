@@ -1,6 +1,6 @@
 const { Kafka } = require("kafkajs")
 
-module.exports = ( config, jsonData ) => {
+module.exports = ( config, jsonData, ambiente ) => {
 
     const clientId = config.get("kafka.groupid")
     const brokers = [config.get("kafka.broker")]
@@ -22,7 +22,7 @@ module.exports = ( config, jsonData ) => {
         const topicMessages = [];
         states.forEach((elem) => {
             topicMessages.push({
-                topic: "do_processor_" + elem.toLowerCase() + "_" + env,
+                topic: "do_processor_" + elem.toLowerCase() + "_" + ambiente,
                 messages: jsonData,
             })
         })

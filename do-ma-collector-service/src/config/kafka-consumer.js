@@ -25,7 +25,7 @@ module.exports = (config, callBackMethod, ambiente) => {
         await consumer.run({
             eachMessage: ({ message }) => {
                 console.log(`received message: ${message.value}`)
-                callBackMethod(config, message.value)
+                callBackMethod(config, message.value, ambiente)
             },
         })
     }

@@ -1,4 +1,5 @@
 const { DocDB } = require("aws-sdk");
+const { SEARCH_PAGE_URL } = require('../reqParams/urls');
 
 module.exports = async (config, message, ambiente) => {
 
@@ -9,8 +10,6 @@ module.exports = async (config, message, ambiente) => {
     const date_ini = new Date(newMessage.date_ini);
     const date_end = new Date(newMessage.date_end);
 
-    const search_url = `https://www.tjma.jus.br/portal/diario?data_inicial=${date_ini.getDate()+1}%2F${date_ini.getMonth()+1}%2F${date_ini.getFullYear()}&data_final=${date_end.getDate()+1}%2F${date_end.getMonth()+1}%2F${date_end.getFullYear()}&pesquisar=`;
-
-    await require("../downloader/downloader")(config, search_url, newMessage, ambiente);
+    await require("../scrapper/scrapper")(config, search_url, newMessage, ambiente);
     console.log("This is Search URL", search_url);
 }

@@ -114,13 +114,51 @@ async function scrapPdf(config, search_url, message, ambiente) {
     });
 } 
 
+async function sendSearchRequest(message){
+  const options = {
+    'method': 'POST',
+    'url': 'https://www2.tjal.jus.br/cdje/consultaAvancada.do',
+    'headers': {
+      'Connection': 'keep-alive',
+      'Cache-Control': 'max-age=0',
+      'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'Upgrade-Insecure-Requests': '1',
+      'Origin': 'https://www2.tjal.jus.br',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'Referer': 'https://www2.tjal.jus.br/cdje/consultaAvancada.do',
+      'Accept-Language': 'en-US,en;q=0.9',
+    },
+    form: {
+      'dadosConsulta.dtInicio': message.date_ini,
+      'dadosConsulta.dtFim': message.date_end,
+      'dadosConsulta.cdCaderno': '-11',
+      'dadosConsulta.pesquisaLivre': message.search,
+      'pagina': ''
+    }
+  };
+  await request(options, function (error, response) {
+    if (error) {
+      consolel.log("Error!----------------------------", error)
+    }
+    console.log(response.body);
+  });
+}
 
 async function scrapPdfCall(config, search_url, message, ambiente) {
-  const dom = await loadListView()
+  sendSearchRequest(message);
+  /*const dom = await loadListView()
   loadJquery(dom);
   setSearchValue(message)
   await pressSearchBtn();
-  findLinkElement();
+  findLinkElement();*/
   // console.log("Here is document -------------------------- ", document)
   /*
   await scrapPdf(config, search_url, message, ambiente);

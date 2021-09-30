@@ -16,8 +16,8 @@ const s3 = new AWS.S3();
 const uuid = uuid4();
 const date = new Date()
 const date_dir = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}-${uuid}`;
-const upload_pdf_path = `dev/al/do-${date_dir}/file/`;
-const upload_json_path = `dev/al/do-${date_dir}/row/`;
+const upload_pdf_path = `dev/pa/do-${date_dir}/file/`;
+const upload_json_path = `dev/pa/do-${date_dir}/row/`;
 const upload_await = [];
 
 const uploadFile = async (path) => {

@@ -10,10 +10,9 @@ module.exports = async (config, message, ambiente) => {
 
     console.log(`handle message: ${newMessage.date_ini}`);
     
-    const date_ini = new Date(newMessage.date_ini);
-    const date_end = new Date(newMessage.date_end);
 
     console.log("Call downloader ----------------------------");
+    
 
     await require("../downloader/downloader")(config, SEARCH_PAGE_URL, newMessage, ambiente);
 }

@@ -14,110 +14,62 @@ const { DownloaderHelper } = require('node-downloader-helper');
 const upload_aws = require('../s3bucket/upload');
 const { SEARCH_PAGE_URL, HOME_PAGE_URL } = require('../reqParams/urls');
 
-const virtualConsole = new jsdom.VirtualConsole();
+var pdf_lists = []
+function downloadPDFsOfPage(page, cookie, pdf_lists){
 
-const cookieJar = new tough.CookieJar();
+  console.log("download page : ", page);
+  var options = {
+    'method': 'POST',
+    'url': 'https://www2.tjal.jus.br/cdje/trocaDePagina.do',
+    'headers': {
+      'Connection': 'keep-alive',
+      'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+      'sec-ch-ua-mobile': '?0',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
+      'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Accept': 'text/javascript, text/html, application/xml, text/xml, */*',
+      'X-Prototype-Version': '1.6.0.3',
+      'X-Requested-With': 'XMLHttpRequest',
+      'sec-ch-ua-platform': '"Windows"',
+      'Origin': `${HOME_PAGE_URL}`,
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'cors',
+      'Sec-Fetch-Dest': 'empty',
+      'Referer': `${SEARCH_PAGE_URL}`,
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cookie': `${cookie}`
+    },
+    body: `pagina=${page}&_=`
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    const $ = cheerio.load(response.body);
+    $('table:nth-child(3)').find('tr.fundocinza1 > td:nth-child(2) > table > tbody > tr > td > a:first-child').each((idx, elem) => {
+      //console.log($(elem).attr('onclick'));
+      pdf_lists.push($(elem).attr('onclick'));
+    })
+    console.log("This is download pdf lists", pdf_lists);
+  });
 
-axios.defaults.jar = cookieJar
-
-function loadJquery(dom){
-  delete require.cache[require.resolve('jquery')]
-  global.window = dom.window
-  global.document = dom.window.document
-  global.$ = require('jquery')
-  // console.log("loadJquery ***********", document.getElementById("dtInicioString").id)
 }
 
-async function loadListView(){
-  const dom = await JSDOM.fromURL(SEARCH_PAGE_URL, {
-      referrer: HOME_PAGE_URL,
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
-      includeNodeLocations: true,
-      storageQuota: 10000000,
-      runScripts: 'dangerously',
-      resources: "usable",
-      virtualConsole,
-      cookieJar,
-  }).then((dom) => {return dom});
-  // console.log("This is the Body", dom.window.document.body.textContent.trim())
-  return dom
+function convertDate(date){
+  const formatDate = new Date(date);
+  return `${formatDate.getDate()}/${formatDate.getMonth()+1}/${formatDate.getFullYear()}`;
 }
 
-function setSearchValue(message){
-  const inputIds = [
-    "dtInicioString",
-    "dtFimString",
-    "procura"
-  ]
-  const matches = [];
-  matches.push(message.date_ini);
-  matches.push(message.date_end);
-  matches.push(message.search);
-  console.log("This is document ------------------------", document);
-  console.log("This is matches ------- ", matches);
-  for(let i = 0; i < inputIds.length; i++){
-    let $input = document.getElementById(inputIds[i])
-    $($input).val(matches[i]);
-  }
-  console.log("This is Set Search Value -------------------", document.getElementById("dtInicioString").value)
-  console.log("This is Set Search Value -------------------", document.getElementById("dtFimString").value)
+function convertLink(str) {
+	let a = str.replace("return popup('", "")
+	let b = a.replace("');", "")
+  let newLink = HOME_PAGE_URL + "/" + b;
+  return newLink;
 }
-
-async function pressSearchBtn(){
-  await timer(1000)
-  console.log(document.getElementsByClassName("spwBotaoDefault")[2].value, "pressed")
-  document.getElementsByClassName("spwBotaoDefault")[2].click()
-  await timer(10000)
-}
-
-function findLinkElement(){
-  //console.log("document", document);
-  const table = document.getElementById('divResultadosInferior');
-  console.log("This is table", table);
-  //console.log("-------------------\n", document.getElementsByTagName("div"));
-  // const $as = Array.from($($table).find('.fundocinzal > td:second-child > table > tbody > tr > td > a:first-child')).each
-  // console.log("process ids", $($table).find('.fundocinzal > td:second-child > table > tbody > tr > td > a:first-child'));
-  ///return $as[0]
-}
-
-const pdf_lists = [];
-
-async function scrapPdf(config, search_url, message, ambiente) {
-    console.log('PDF downloading');
-    await got(search_url).then(response => {
-        const $ = cheerio.load(response.body);
-        
-        $('#the_content').find('.info-box > a').each((idx, elem) => {
-            const item = $(elem).attr('href');
-            console.log(item);
-            pdf_lists.push(item);
-        })
-        if(!$('ul.pagination').length){
-          console.log("No Pagination----------------", pdf_lists)
-          return ;
-        } else {
-          $('ul.pagination').find('li.page-item').each((idx, elem) => {
-            if($(elem).attr('class').includes('page-item active')){
-              if($(elem).next().hasClass('page-item')){
-                const search_page_url = "https://transparencia.tjpi.jus.br" + $(elem).next('li').find('a').attr('href')
-                scrapPdf(config, search_page_url, message, ambiente);
-              } else {
-                console.log("This is exit function--------------", pdf_lists);
-                return ;
-              }
-            }
-          });
-
-        }
-    }).catch(err => {
-        console.log(err);
-    });
-} 
 
 async function sendSearchRequest(message){
+  console.log("This is search value ----------------", message);
   const options = {
     'method': 'POST',
-    'url': 'https://www2.tjal.jus.br/cdje/consultaAvancada.do',
+    'url': `${SEARCH_PAGE_URL}`,
     'headers': {
       'Connection': 'keep-alive',
       'Cache-Control': 'max-age=0',
@@ -125,7 +77,7 @@ async function sendSearchRequest(message){
       'sec-ch-ua-mobile': '?0',
       'sec-ch-ua-platform': '"Windows"',
       'Upgrade-Insecure-Requests': '1',
-      'Origin': 'https://www2.tjal.jus.br',
+      'Origin': `${HOME_PAGE_URL}`,
       'Content-Type': 'application/x-www-form-urlencoded',
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -133,12 +85,12 @@ async function sendSearchRequest(message){
       'Sec-Fetch-Mode': 'navigate',
       'Sec-Fetch-User': '?1',
       'Sec-Fetch-Dest': 'document',
-      'Referer': 'https://www2.tjal.jus.br/cdje/consultaAvancada.do',
+      'Referer': `${SEARCH_PAGE_URL}`,
       'Accept-Language': 'en-US,en;q=0.9',
     },
     form: {
-      'dadosConsulta.dtInicio': message.date_ini,
-      'dadosConsulta.dtFim': message.date_end,
+      'dadosConsulta.dtInicio': convertDate(message.date_ini),
+      'dadosConsulta.dtFim': convertDate(message.date_end),
       'dadosConsulta.cdCaderno': '-11',
       'dadosConsulta.pesquisaLivre': message.search,
       'pagina': ''
@@ -146,14 +98,22 @@ async function sendSearchRequest(message){
   };
   await request(options, function (error, response) {
     if (error) {
-      consolel.log("Error!----------------------------", error)
+      consolel.log("Error!----------------------------", error);
     }
-    console.log(response.body);
+    const $ = cheerio.load(response.body);
+    const szPages = $('#divResultadosSuperior').find('table > tbody > tr > td:first-child').text();
+    const szTexts = szPages.split(' ');
+    const nPages = Math.ceil(szTexts[szTexts.length - 2] / 10);
+    for(let i = 1; i <= nPages; i ++)
+    {
+      downloadPDFsOfPage(i, response.headers['set-cookie'][0], pdf_lists);
+    }
+    //await scrapPdf(response.body, response.headers['set-cookie'][0]);
   });
 }
 
 async function scrapPdfCall(config, search_url, message, ambiente) {
-  sendSearchRequest(message);
+  await sendSearchRequest(message);
   /*const dom = await loadListView()
   loadJquery(dom);
   setSearchValue(message)

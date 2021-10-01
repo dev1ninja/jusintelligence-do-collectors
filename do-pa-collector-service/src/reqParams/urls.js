@@ -1,4 +1,4 @@
-const HOME_PAGE_URL = 'https://www.tjpa.jus.br/PortalExterno/'
+const HOME_PAGE_URL = 'https://www.tjpa.jus.br/'
 const SEARCH_PAGE_URL = 'https://dje.tjpa.jus.br/ClientDJEletronico/app/home.html'
 
 module.exports.HOME_PAGE_URL = HOME_PAGE_URL;

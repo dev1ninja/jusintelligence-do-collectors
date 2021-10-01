@@ -15,7 +15,9 @@ const upload_aws = require('../s3bucket/upload');
 const { SEARCH_PAGE_URL, HOME_PAGE_URL } = require('../reqParams/urls');
 
 var pdf_lists = []
-function downloadPDFsOfPage(page, cookie, pdf_lists){
+function downloadPDFsOfPage(page, cookie, pdf_lists){ //to get the response per page
+
+  console.log("---------downloadPDFsofPage function called!------------");
 
   console.log("download page : ", page);
   var options = {
@@ -45,7 +47,7 @@ function downloadPDFsOfPage(page, cookie, pdf_lists){
     if (error) throw new Error(error);
     const $ = cheerio.load(response.body);
     $('table:nth-child(3)').find('tr.fundocinza1 > td:nth-child(2) > table > tbody > tr > td > a:first-child').each((idx, elem) => {
-      //console.log($(elem).attr('onclick'));
+      console.log($(elem).attr('onclick'));
       pdf_lists.push($(elem).attr('onclick'));
     })
     console.log("This is download pdf lists", pdf_lists);
@@ -65,7 +67,8 @@ function convertLink(str) {
   return newLink;
 }
 
-async function sendSearchRequest(message){
+async function sendSearchRequest(message){ // this is first download
+  console.log("---------sendSearchRequest function called!------------");
   console.log("This is search value ----------------", message);
   const options = {
     'method': 'POST',
@@ -114,6 +117,7 @@ async function sendSearchRequest(message){
 }
 
 async function scrapPdfCall(config, search_url, message, ambiente) {
+  console.log("---------scrapPdfCall function called!------------");
   await sendSearchRequest(message);
   /*const dom = await loadListView()
   loadJquery(dom);

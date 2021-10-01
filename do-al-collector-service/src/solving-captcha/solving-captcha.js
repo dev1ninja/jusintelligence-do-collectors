@@ -2,22 +2,11 @@ const bestcaptchasolver = require('bestcaptchasolver');
 const { DownloaderHelper } = require('node-downloader-helper');
 const cheerio = require('cheerio');
 const got = require('got');
-const ACCESS_TOKEN = 'AAE6473685E04A6CB52BCC449D84ACB5';
-const SITE_KEY = '6LfALTkUAAAAALzYBt8XXduGuX-XRaljNf99yVpX';
 
-function parsingUrl(page_url){
-
-}
+const { SITE_KEY, ACCESS_TOKEN } = require('../reqParams/recaptcha-info');
 
 async function getUuid(page_url){
-  await got(page_url).then(response => {
-    console.log(page_url)
-    console.log(response.body)
-    //const $ = cheerio.load(response.body);
-    console.log("Cheerio Loaded")
-    //console.log($('tbody > tr > td:nth-child(2) > table > tbody > tr > td > #uuidCaptcha').attr('value'))
-    //$('#sessaoCaptcha > tbody > tr > td:nth-child(2) > table > tbody > tr > td > #uuidCaptcha').attr('value')
-  })
+  
 }
 
 async function solveCaptcha(page_url){
@@ -38,7 +27,6 @@ async function solveCaptcha(page_url){
   }).then( async (data) => {
     console.log(`Recaptcha response: ${JSON.stringify(data)}`);
     console.log('PDF downloading...');
-   //const url = `https://www2.tjal.jus.br/cdje/getPaginaDoDiario.do?conversationId=&cdVolume=${}&nuDiario=${}&cdCaderno=${}&nuSeqpagina=${}&dtDiario=&uuidCaptcha=sajcaptcha_${data.gresponse}`
     const dl = new DownloaderHelper(page_url, './downloads');
     dl.on('end', () => console.log('Download Completed'))
     dl.start();

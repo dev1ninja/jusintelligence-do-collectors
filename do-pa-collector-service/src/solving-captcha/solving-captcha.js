@@ -3,9 +3,10 @@ const request = require('request');
 const fs = require('fs');
 const { DownloaderHelper } = require('node-downloader-helper');
 const upload_aws = require('../s3bucket/upload');
-const ACCESS_TOKEN = 'AAE6473685E04A6CB52BCC449D84ACB5';
-const SITE_KEY = '6LdBl1cUAAAAAAwUNok3PzSNT0coGiRWkl90Yzqz';
+
+const { SITE_KEY, ACCESS_TOKEN } = require('../reqParams/recaptcha-info');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
 async function solveCaptcha(page_url, message){
   var captcha_id = undefined;
   bestcaptchasolver.set_access_token(ACCESS_TOKEN);

@@ -8,11 +8,5 @@ module.exports = async (config, message, ambiente) => {
 
     let newMessage = JSON.parse(message);
 
-    console.log(`handle message: ${newMessage.date_ini}`);
-    
-
-    console.log("Call downloader ----------------------------");
-    
-
     await require("../downloader/downloader")(config, SEARCH_PAGE_URL, newMessage, ambiente);
 }

@@ -2,6 +2,7 @@ const bestcaptchasolver = require('bestcaptchasolver');
 const request = require('request');
 const fs = require('fs');
 const { DownloaderHelper } = require('node-downloader-helper');
+const upload_aws = require('../s3bucket/upload');
 const ACCESS_TOKEN = 'AAE6473685E04A6CB52BCC449D84ACB5';
 const SITE_KEY = '6LdBl1cUAAAAAAwUNok3PzSNT0coGiRWkl90Yzqz';
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
@@ -71,6 +72,15 @@ async function solveCaptcha(page_url, message){
         console.log("This is download await: ", download_await);
         await Promise.all(download_await);
         console.log("---------------PDF Download completed-------------")
+        const sendJsonData = await upload_aws(search_result_dir);
+        for(let i = 0; i < sendJsonData.length; i++){
+          sendJsonData[i]["uf"] = "al";
+          sendJsonData[i]["search"] = message.search;
+        }/*
+        const producer = require('../config/kafka-producer')(config, ambiente, sendJsonData);
+        producer().catch( err => {
+          console.error("error in consumer: ", err)
+        })*/
       });
     }).catch( err => {
       console.log(`Error *: ${err.message || err}`);

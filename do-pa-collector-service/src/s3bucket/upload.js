@@ -46,11 +46,12 @@ const uploadFile = async (path) => {
             console.log("Error : ", err);
         }
     )
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     return obj;
 }
 
 const upload_aws = async (path) => {
+
+    console.log("-------------File Uploading to S3 bucket .........-----------------");
 
     const obj = await uploadFile(path);
 

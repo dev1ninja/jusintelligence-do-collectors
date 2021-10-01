@@ -100,6 +100,7 @@ async function sendSearchRequest(message){
     if (error) {
       consolel.log("Error!----------------------------", error);
     }
+    fs.writeFileSync("test.txt", response.body)
     const $ = cheerio.load(response.body);
     const szPages = $('#divResultadosSuperior').find('table > tbody > tr > td:first-child').text();
     const szTexts = szPages.split(' ');

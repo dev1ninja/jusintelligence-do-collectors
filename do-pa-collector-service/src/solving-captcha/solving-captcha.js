@@ -75,13 +75,13 @@ async function solveCaptcha(page_url, message){
         console.log("---------------PDF Download completed-------------")
         const sendJsonData = await upload_aws(search_result_dir);
         for(let i = 0; i < sendJsonData.length; i++){
-          sendJsonData[i]["uf"] = "al";
+          sendJsonData[i]["uf"] = "PA";
           sendJsonData[i]["search"] = message.search;
-        }/*
+        }
         const producer = require('../config/kafka-producer')(config, ambiente, sendJsonData);
         producer().catch( err => {
           console.error("error in consumer: ", err)
-        })*/
+        })
       });
     }).catch( err => {
       console.log(`Error *: ${err.message || err}`);

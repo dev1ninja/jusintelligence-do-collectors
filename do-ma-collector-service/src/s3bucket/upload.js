@@ -46,7 +46,6 @@ const uploadFile = async (path) => {
             console.log("Error : ", err);
         }
     )
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     return obj;
 }
 

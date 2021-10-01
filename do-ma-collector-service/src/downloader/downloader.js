@@ -35,6 +35,10 @@ async function scrapPdf(config, search_url, message, ambiente) {
               await Promise.all(download_await);
               console.log(`${pdf_lists.length} files Downloaded!`);
               const sendJsonData = await upload_aws(search_result_dir);
+              for(let i = 0; i < sendJsonData.length; i++){
+                sendJsonData[i]["uf"] = "ma";
+                sendJsonData[i]["search"] = message.search;
+              }
               const producer = require('../config/kafka-producer')(config, ambiente, sendJsonData);
               producer().catch( err => {
                   console.error("error in consumer: ", err)

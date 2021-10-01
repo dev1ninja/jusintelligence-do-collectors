@@ -14,7 +14,6 @@ springCloudConfigClient.load({
     auth: { user: "root", pass: "s3cr3t"},
     profiles: [ambiente] })
   .then(config => {
-    console.log(config);
     require("./routes")(app, config);
     // const consume = require("./config/kafka-consumer")(config, require("./listener/listener-search-url"), ambiente);
     // console.log(consume);

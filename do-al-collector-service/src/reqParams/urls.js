@@ -1,4 +1,4 @@
-const HOME_PAGE_URL = 'https://www.tjal.jus.br/'
+const HOME_PAGE_URL = 'https://www.tjal.jus.br'
 const SEARCH_PAGE_URL = 'https://www2.tjal.jus.br/cdje/index.do'
 
 module.exports.HOME_PAGE_URL = HOME_PAGE_URL;

@@ -2,7 +2,6 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 const uuid4 = require('uuid4');
 const { ID, SECRET, BUCKET_NAME, REGION } = require('../reqParams/s3bucket-info');
-const { AmplifyBackend } = require('aws-sdk');
 
 AWS.config.update({
     accessKeyId: ID,
@@ -19,7 +18,7 @@ const upload_pdf_path = `dev/ma/do-${date_dir}/file/`;
 const upload_json_path = `dev/ma/do-${date_dir}/row/`;
 const upload_await = [];
 
-const uploadFile = async (path) => {
+const uploadFile = async (path) => { // Upload PDF files to S3 bucket
     let obj = [];
     fs.readdirSync(path).forEach( (file) => {
         console.log(file);
@@ -37,7 +36,7 @@ const uploadFile = async (path) => {
     })
     obj = await Promise.all(upload_await).then(
         function(data){
-            // obj.push({"date":date_dir, "file":upload_pdf_path+file});
+            obj.push({"date":date_dir, "file":upload_pdf_path+file});
             console.log(data);
             return data.map((elem, idx) => {
                 return {"date":date_dir, "file":elem.key};
@@ -49,7 +48,7 @@ const uploadFile = async (path) => {
     return obj;
 }
 
-const upload_aws = async (path) => {
+const upload2aws = async (path) => {
 
     const obj = await uploadFile(path);
 
@@ -65,7 +64,7 @@ const upload_aws = async (path) => {
         ContentType: 'application/json',
     };
 
-    await s3.upload(params, function (err, data) {
+    await s3.upload(params, function (err, data) { // Upload JSON file
         if (err) {
             throw err;
             console.log('Error uploading data: ', data);
@@ -76,4 +75,4 @@ const upload_aws = async (path) => {
     return obj;
 }
 
-module.exports = upload_aws;
+module.exports = upload2aws;

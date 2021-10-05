@@ -2,7 +2,7 @@ const cheerio = require('cheerio');
 const got = require('got');
 const fs = require('fs');
 const { DownloaderHelper } = require('node-downloader-helper');
-const upload_aws = require('../s3bucket/upload');
+const upload2aws = require('../s3bucket/upload2aws');
 
 
 const pdf_lists = [];
@@ -34,7 +34,7 @@ async function scrapPdf(config, search_url, message, ambiente) {
               console.log("This is download await: ", download_await);
               await Promise.all(download_await);
               console.log(`${pdf_lists.length} files Downloaded!`);
-              const sendJsonData = await upload_aws(search_result_dir);
+              const sendJsonData = await upload2aws(search_result_dir);
               for(let i = 0; i < sendJsonData.length; i++){
                 sendJsonData[i]["uf"] = "ma";
                 sendJsonData[i]["search"] = message.search;

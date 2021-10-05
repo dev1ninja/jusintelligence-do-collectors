@@ -1,9 +1,6 @@
 const request = require('request')
-const util = require('util')
-const timer = util.promisify(setTimeout)
-const fs = require('fs')
 const cheerio = require('cheerio');
-const upload_aws = require('../s3bucket/upload');
+const upload2aws = require('../s3bucket/upload');
 const solveCaptcha_downloads = require('../solving-captcha/solving-captcha');
 const { HOME_PAGE_URL } = require('../reqParams/urls');
 
@@ -139,7 +136,7 @@ async function scrapPdfCall(config, search_url, message, ambiente ) {
   await sendSearchRequest(config, search_url, message, ambiente, async ()=>{
     const search_result_dir = `./${message.date_ini}-${message.date_end}`;
     console.log("This is directory: ", search_result_dir);
-    const sendJsonData = await upload_aws(search_result_dir);
+    const sendJsonData = await upload2aws(search_result_dir);
     for(var i = 0; i < sendJsonData.length; i++){
       sendJsonData[i]["uf"] = "AL";
       sendJsonData[i]["search"] = message.search;

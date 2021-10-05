@@ -20,7 +20,7 @@ const upload_pdf_path = `dev/al/do-${date_dir}/file/`;
 const upload_json_path = `dev/al/do-${date_dir}/row/`;
 const upload_await = [];
 
-const uploadFile = async (path) => {
+const uploadFile2aws = async (path) => {
     let obj = [];
     fs.readdirSync(path).forEach( (file) => {
         console.log(file);
@@ -46,13 +46,12 @@ const uploadFile = async (path) => {
             console.log("Error : ", err);
         }
     )
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     return obj;
 }
 
-const upload_aws = async (path) => {
+const upload2aws = async (path) => {
 
-    const obj = await uploadFile(path);
+    const obj = await uploadFile2aws(path);
 
     console.log("Uploading Json", obj);
 
@@ -77,4 +76,4 @@ const upload_aws = async (path) => {
     return obj;
 }
 
-module.exports = upload_aws;
+module.exports = upload2aws;

@@ -36,7 +36,6 @@ const uploadFile = async (path) => { // Upload PDF files to S3 bucket
     })
     obj = await Promise.all(upload_await).then(
         function(data){
-            obj.push({"date":date_dir, "file":upload_pdf_path+file});
             console.log(data);
             return data.map((elem, idx) => {
                 return {"date":date_dir, "file":elem.key};

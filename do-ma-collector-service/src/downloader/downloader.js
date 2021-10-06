@@ -28,21 +28,29 @@ async function scrapPdf(config, search_url, message, ambiente) {
                 fs.mkdirSync(search_result_dir)
               }
               for(let i = 0;i < pdf_lists.length; i++){
-                const download = new DownloaderHelper(pdf_lists[i], search_result_dir);
-                download_await.push(download.start());
+                const download = () => {
+                  return new Promise(function (resolve, reject) {
+                    var pdf = new DownloaderHelper(pdf_lists[i], search_result_dir);
+                    console.log("Download Starting....")
+                    pdf.on('end', () => resolve());
+                    pdf.start();
+                  })
+                }
+                download_await.push(download());
               }
               console.log("This is download await: ", download_await);
-              await Promise.all(download_await);
-              console.log(`${pdf_lists.length} files Downloaded!`);
-              const sendJsonData = await upload2aws(search_result_dir);
-              for(let i = 0; i < sendJsonData.length; i++){
-                sendJsonData[i]["uf"] = "ma";
-                sendJsonData[i]["search"] = message.search;
-              }
-              const producer = require('../config/kafka-producer')(config, ambiente, sendJsonData);
-              producer().catch( err => {
-                  console.error("error in consumer: ", err)
-              })
+              await Promise.all(download_await).then(async () => {
+                console.log(`${pdf_lists.length} files Downloaded!`);
+                const sendJsonData = await upload2aws(search_result_dir);
+                for(let i = 0; i < sendJsonData.length; i++){
+                  sendJsonData[i]["uf"] = "ma";
+                  sendJsonData[i]["search"] = message.search;
+                }
+                const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
+                producer().catch( err => {
+                    console.error("error in consumer: ", err)
+                })
+              });
               return ;
             }
             console.log($(elem).next('li').find('a').attr('href'));

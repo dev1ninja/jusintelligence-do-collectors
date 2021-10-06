@@ -34,11 +34,12 @@ const uploadFile = async (path) => { // Upload PDF files to S3 bucket
         upload_await.push(promise);
         
     })
+        
     obj = await Promise.all(upload_await).then(
         function(data){
             console.log(data);
             return data.map((elem, idx) => {
-                return {"date":date_dir, "file":elem.key};
+                return {"date":date_dir, "file":elem.Key};
             })
         }, function(err){
             console.log("Error : ", err);

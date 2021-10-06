@@ -5,8 +5,8 @@ const app = express();
 app.use(cors());
 
 const port = 3000;
-let microserviceName = "microservice-model"
-let ambiente = process.env.AMBIENTE || "local"
+let microserviceName = "do-processor-ma";
+let ambiente = process.env.AMBIENTE || "local";
 
 springCloudConfigClient.load({
     endpoint: 'https://scc-dev.dataseed.de:443',
@@ -14,17 +14,16 @@ springCloudConfigClient.load({
     auth: { user: "root", pass: "s3cr3t"},
     profiles: [ambiente] })
   .then(config => {
-    // console.log(config);
     require("./routes")(app, config);
-    // const consume = require("./config/kafka-consumer")(config, require("./listener/listener-search-url"), ambiente);
-    // console.log(consume);
-    // consume().catch((err) => {
-    //     console.error("error in consumer: ", err)
-    // })
-    const consume = async () => require("./listener/listener-search-url")(config, '{"search": "something", "date_ini": "2021-09-10", "date_end": "2021-09-13"}', ambiente)
-    consume();
-    app.listen(port, () =>
-        console.log(`App working at http://localhost:${port}`)
-    );
+    const consume = require("./config/kafka-consumer")(config, require("./listener/listener-search-url"), ambiente);
+    console.log(consume);
+    consume().catch((err) => {
+        console.error("error in consumer: ", err)
+    })
+    // const consume = async () => require("./listener/listener-search-url")(config, '{"search": "something", "date_ini": "2021-09-10", "date_end": "2021-09-13"}', ambiente)
+    // consume();
+    // app.listen(port, () =>
+    //     console.log(`App working at http://localhost:${port}`)
+    // );
 
   }).catch(console.error)

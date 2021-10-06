@@ -2,7 +2,7 @@ module.exports = async (config, message, ambiente) => {
 
     let newMessage = JSON.parse(message);
 
-    console.log(`handle message: ${newMessage.date_ini}`);
+    // console.log(`handle message: ${newMessage.date_ini}`);
     
     const date_ini = new Date(newMessage.date_ini);
     const date_end = new Date(newMessage.date_end);

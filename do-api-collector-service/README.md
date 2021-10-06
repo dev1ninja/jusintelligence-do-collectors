@@ -62,7 +62,7 @@ npm start
 
 ```
 Post
-curl -X POST http://localhost:3000/api/collect -H 'Content-Type: application/json' -d '{"search":"something","date_ini":"1995-10-28","date_end":"2021-08-26","states":["MA","PI","BA"]}'
+curl -X POST http://localhost:3030/api/collect -H 'Content-Type: application/json' -d '{"search":"something","date_ini":"1995-10-28","date_end":"2021-08-26","states":["MA"]}'
 
 ```
 docker rmi $(docker images -q)

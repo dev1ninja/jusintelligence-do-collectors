@@ -4,7 +4,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const port = 4000;
+const port = 3030;
 let ambiente = process.env.AMBIENTE || "local";
 
 require("./routes")(app, ambiente);

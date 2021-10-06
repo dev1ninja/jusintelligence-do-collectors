@@ -3,6 +3,23 @@ const { Kafka, CompressionTypes, logLevel } = require("kafkajs");
 
 module.exports = ( jsonData, ambiente ) => {
 
+  var sendMessage = async (config, jsonData) => {
+    const clientId = config.get("kafka.groupid");
+    const brokers = [config.get("kafka.broker")];
+    const topic = config.get("kafka.topic");
+
+    const kafka = new Kafka({ clientId, brokers });
+    const producer = kafka.producer();
+    
+    await producer.connect();
+
+    await producer.send({
+        topic: topic,
+        messages: [{key: topic, value: JSON.stringify(jsonData)}]
+    })
+    // await producer.disconnect();
+  }
+
   const producer = async () => {
       
     const states = jsonData.states;
@@ -16,23 +33,9 @@ module.exports = ( jsonData, ambiente ) => {
         name: microserviceName,
         auth: { user: "root", pass: "s3cr3t"},
         profiles: [ambiente] 
-      }).then(async config => {
-          const clientId = config.get("kafka.groupid");
-          const brokers = [config.get("kafka.broker")];
-          console.log("This is brokers...", brokers);
-          const topic = config.get("kafka.topic");
-          console.log("This is topic: \n", topic);
-          const kafka = new Kafka({ clientId, brokers });
-          const producer = kafka.producer();
-          console.log("Calling producer connect...");
-          await producer.connect();
-          console.log("Producer Connect Ended...")
-          await producer.send({
-              topic: topic,
-              messages: jsonData,
-          })
-
-        }).catch(console.error);
+      }).then(config => {
+        sendMessage(config, jsonData);
+      }).catch(console.error);
     }
   }
   return producer;

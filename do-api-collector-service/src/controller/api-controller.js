@@ -4,7 +4,7 @@ const router = express.Router();
 module.exports = (ambiente) => {
     router
         .route("/collect").post((req, res) => {
-            console.log("this is post json: ", req.body);
+            // console.log("this is post json: ", req.body);
             res.send(req.body)
             const producer = require("../config/kafka-producer")(req.body, ambiente);
             producer().catch((err) => {

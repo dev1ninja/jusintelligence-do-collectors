@@ -7,8 +7,7 @@ const upload_aws = require('../s3bucket/upload');
 const { SITE_KEY, ACCESS_TOKEN } = require('../reqParams/recaptcha-info');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
-async function solveCaptcha(page_url, message){
-  var captcha_id = undefined;
+async function solveCaptcha(page_url, message, ambiente){
   bestcaptchasolver.set_access_token(ACCESS_TOKEN);
 
   await bestcaptchasolver.account_balance().then( (balance) => {
@@ -20,7 +19,6 @@ async function solveCaptcha(page_url, message){
       user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36'
     });
   }).then( id => {
-    captcha_id = id;
     return bestcaptchasolver.retrieve_captcha(id);
   }).then( async (data) => {
     console.log(`Recaptcha response: ${data.gresponse}`);
@@ -66,21 +64,29 @@ async function solveCaptcha(page_url, message){
           fs.mkdirSync(search_result_dir)
         }
         for(let i = 0;i < correct_links.length; i++){
-          const download = new DownloaderHelper(correct_links[i], search_result_dir);
-          download_await.push(download.start());
+          const download = () => {
+            return new Promise(function (resolve, reject) {
+              var pdf = new DownloaderHelper(correct_links[i], search_result_dir);
+              console.log("Download Starting....")
+              pdf.on('end', () => resolve());
+              pdf.start();
+            })
+          }
+          download_await.push(download());
           console.log("items\n", correct_links[i]);
         }
         console.log("This is download await: ", download_await);
-        await Promise.all(download_await);
-        console.log("---------------PDF Download completed-------------")
-        const sendJsonData = await upload_aws(search_result_dir);
-        for(let i = 0; i < sendJsonData.length; i++){
-          sendJsonData[i]["uf"] = "PA";
-          sendJsonData[i]["search"] = message.search;
-        }
-        const producer = require('../config/kafka-producer')(config, ambiente, sendJsonData);
-        producer().catch( err => {
-          console.error("error in consumer: ", err)
+        await Promise.all(download_await).then(async () => {
+          console.log("---------------PDF Download completed-------------")
+          const sendJsonData = await upload_aws(search_result_dir);
+          for(let i = 0; i < sendJsonData.length; i++){
+            sendJsonData[i]["uf"] = "PA";
+            sendJsonData[i]["search"] = message.search;
+          }
+          const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
+          producer().catch( err => {
+            console.error("error in consumer: ", err)
+          })
         })
       });
     }).catch( err => {

@@ -5,7 +5,7 @@ const app = express();
 app.use(cors());
 
 const port = 3000;
-let microserviceName = "microservice-model"
+let microserviceName = "do-processor-pa"
 let ambiente = process.env.AMBIENTE || "local"
 
 springCloudConfigClient.load({
@@ -22,8 +22,8 @@ springCloudConfigClient.load({
     })
     // const consume = async () => require("./listener/listener-search-url")(config, '{"search": "OU", "date_ini": "2021-09-10", "date_end": "2021-09-20"}', ambiente)
     // consume();
-    app.listen(port, () =>
-        console.log(`App working at http://localhost:${port}`)
-    );
+    // app.listen(port, () =>
+    //     console.log(`App working at http://localhost:${port}`)
+    // );
 
   }).catch(console.error)

@@ -25,5 +25,4 @@ springCloudConfigClient.load({
     // app.listen(port, () =>
     //     console.log(`App working at http://localhost:${port}`)
     // );
-
   }).catch(console.error)

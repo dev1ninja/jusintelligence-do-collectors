@@ -1,3 +1,9 @@
+### Notice: If you have an error to run docker, please use this command.
+```
+docker rmi $(docker images -q)
+docker rm kafka-server1 $(docker ps -q)
+```
+
 ####  1 - Execute Apache Kafka
 This is the instructions to execute apache Kafka locally
 
@@ -9,8 +15,7 @@ docker run --name kafka-server1 --network kafka-net -e ALLOW_PLAINTEXT_LISTENER=
 
 ```
 
-
-2.2 Create a topic (ex: topic_model_local)
+2.2 Create a topic (ex: do_processor_ma_local) <!--If we send states, we need to create all topic based on states. In this, we just post only one states. {"search":"something","date_ini":"1995-10-28","date_end":"2021-08-26","states":["MA"]}-->
 <br/>
 Execute this command in terminal to create a topic:
 ```
@@ -19,51 +24,19 @@ docker exec -ti kafka-server1 \
   --zookeeper zookeeper-server:2181 \
   --replication-factor 1 \
   --partitions 1 \
-  --topic topic_model_local
+  --topic do_processor_ma_local
 ```
 <br/>
 
-2.3 To send messages to this topic type this command in terminal:
-```
-docker exec -ti kafka-server1 \
-  /opt/bitnami/kafka/bin/kafka-console-producer.sh \
-  --request-required-acks 1 \
-  --broker-list localhost:9092 \
-  --topic topic_model_local
-```
-2.3.1 To send the message type a JSON like this in terminal:
-```
-{"id": "12345"}
-```
-
-Press Ctrl + C to go out.
-
-2.3.2 To consume messages using terminal type this:
-```
-docker exec -ti kafka-server1 /opt/bitnami/kafka/bin/kafka-console-consumer.sh \
-  --bootstrap-server localhost:9092 \
-  --topic topic_model_local \
-  --from-beginning
-```
-
-2.3.3  Removing the topic:
-```
-docker exec -ti kafka-server1 \
-  /opt/bitnami/kafka/bin/kafka-topics.sh --delete \
-  --zookeeper zookeeper-server:2181 \
-  --topic topic_model_local
-```
-
-####  2 - Execute the project
-Starting the project:
+3 - Execute the project
+Starting the project
 ```
 npm start
 ```
 
+3.1 To send messages to this api/collect, use this curl bash.
 ```
-Post
+Post: 
 curl -X POST http://localhost:3030/api/collect -H 'Content-Type: application/json' -d '{"search":"something","date_ini":"1995-10-28","date_end":"2021-08-26","states":["MA"]}'
 
 ```
-docker rmi $(docker images -q)
-docker rm kafka-server1 $(docker ps -q)

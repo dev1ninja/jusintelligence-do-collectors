@@ -20,6 +20,7 @@ docker exec -ti kafka-server1 \
   --replication-factor 1 \
   --partitions 1 \
   --topic do_processor_ma_local
+
 ```
 <br/>
 
@@ -33,6 +34,15 @@ docker exec -ti kafka-server1 \
 ```
 
 5 - Create a topic "do_processor_final_local".
+```
+docker exec -ti kafka-server1 \
+  /opt/bitnami/kafka/bin/kafka-topics.sh --create \
+  --zookeeper zookeeper-server:2181 \
+  --replication-factor 1 \
+  --partitions 1 \
+  --topic do_processor_final_local
+
+```
 
 6 - Execute the project
 ```

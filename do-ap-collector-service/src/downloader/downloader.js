@@ -1,6 +1,5 @@
 const axios = require('axios');
 const upload2aws = require('../s3bucket/upload');
-const solveCaptcha_downloads = require('../solving-captcha/solving-captcha');
 const { ORIGIN_PAGE_URL, SEARCH_URL } = require('../reqParams/urls');
 const fs = require('fs');
 const { DownloaderHelper } = require('node-downloader-helper');
@@ -26,11 +25,6 @@ function downloadPdf(pdfLink, dest_dir) {
     pdf.on('end', () => resolve());
     pdf.start();
   })
-}
-
-function convertDate(date){
-  const formatDate = new Date(date);
-  return `${formatDate.getDate()+1}/${formatDate.getMonth()+1}/${formatDate.getFullYear()}`;
 }
 
 function convertLink(obj) {

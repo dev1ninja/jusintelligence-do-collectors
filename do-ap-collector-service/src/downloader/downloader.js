@@ -80,11 +80,7 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   };
 
   var response = await doAxios(config);
-  // console.log("-------This is Axios Response Result-------\n", response.dados);
   const pdf_lists = [];
-  // // fs.writeFileSync('./test.txt', JSON.stringify(response.dados));
-  // var origin = JSON.stringify(response);
-  // var newResponse = JSON.parse(origin);
   console.log('This is response count: ', response.dados.dados.length);
   for(let i = 0; i < response.dados.dados.length; i++){
     console.log("This is test---------", response.dados.dados[i]);
@@ -99,10 +95,10 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   {
     downloads.push(downloadPdf(pdf_lists[i], dest_dir));
   }
-  console.log("downloads count", downloads.length);
-  console.log("------- promise start --------");
+  console.log("------- download start --------");
   await Promise.all(downloads).then((values) => {
-    console.log("------- promise end --------");
+    console.log("------- download end --------");
+    console.log("downloaded count", downloads.length);
     callback();
   })
 }
@@ -110,17 +106,17 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
 async function scrapPdfCall(config, message, ambiente ) {
   console.log("---------scrapPdfCall function called!------------");
   await sendSearchRequest(config, message, ambiente, async ()=>{
-    // const search_result_dir = `./${message.date_ini}-${message.date_end}`;
-    // console.log("This is directory: ", search_result_dir);
-    // const sendJsonData = await upload2aws(search_result_dir);
-    // for(var i = 0; i < sendJsonData.length; i++){
-    //   sendJsonData[i]["uf"] = "AP";
-    //   sendJsonData[i]["search"] = message.search;
-    // }
-    // const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
-    // producer().catch( err => {
-    //     console.error("error in consumer: ", err)
-    // })
+    const search_result_dir = `./${message.date_ini}-${message.date_end}`;
+    console.log("This is directory: ", search_result_dir);
+    const sendJsonData = await upload2aws(search_result_dir);
+    for(var i = 0; i < sendJsonData.length; i++){
+      sendJsonData[i]["uf"] = "AP";
+      sendJsonData[i]["search"] = message.search;
+    }
+    const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
+    producer().catch( err => {
+        console.error("error in consumer: ", err)
+    })
   });
   
 }

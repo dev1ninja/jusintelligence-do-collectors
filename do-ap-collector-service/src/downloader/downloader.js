@@ -5,10 +5,8 @@ const upload2aws = require('../s3bucket/upload');
 const solveCaptcha_downloads = require('../solving-captcha/solving-captcha');
 const { HOME_PAGE_URL, ORIGIN_PAGE_URL, SEARCH_URL } = require('../reqParams/urls');
 const fs = require('fs');
-// const { config } = require('process');
-
-var pdf_lists = []
-var pdf_name = 0;
+const { isAsyncFunction } = require('util/types');
+const { DownloaderHelper } = require('node-downloader-helper');
 
 function doAxios(config) {
   return new Promise(function (resolve, reject) {
@@ -22,61 +20,24 @@ function doAxios(config) {
   });
 }
 
-// async function downloadPDFsOfPage(page, cookie, pdf_lists, message){ //to get the response per page
-
-//   console.log("---------downloadPDFsofPage function called!------------");
-
-//   console.log("download page : ", page);
-//   var options = {
-//     'method': 'POST',
-//     'url': 'https://www2.tjal.jus.br/cdje/trocaDePagina.do',
-//     'headers': {
-//       'Connection': 'keep-alive',
-//       'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
-//       'sec-ch-ua-mobile': '?0',
-//       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
-//       'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-//       'Accept': 'text/javascript, text/html, application/xml, text/xml, */*',
-//       'X-Prototype-Version': '1.6.0.3',
-//       'X-Requested-With': 'XMLHttpRequest',
-//       'sec-ch-ua-platform': '"Windows"',
-//       'Origin': `${HOME_PAGE_URL}`,
-//       'Sec-Fetch-Site': 'same-origin',
-//       'Sec-Fetch-Mode': 'cors',
-//       'Sec-Fetch-Dest': 'empty',
-//       'Referer': `${search_url}`,
-//       'Accept-Language': 'en-US,en;q=0.9',
-//       'Cookie': `${cookie}`
-//     },
-//     body: `pagina=${page}&_=`
-//   };
-
-//   var response = await doRequest(options);
-//   const $ = cheerio.load(response.body);
-//   const downloads = [];  
-
-//   $('table:nth-child(3)').find('tr.fundocinza1 > td:nth-child(2) > table > tbody > tr > td > a:first-child').each((idx, elem) => {
-//     console.log($(elem).attr('onclick'));
-//     pdf_lists.push($(elem).attr('onclick'));
-//     downloads.push(solveCaptcha_downloads(convertLink($(elem).attr('onclick')), message, pdf_name));
-//     pdf_name++;
-//   });
-
-//   await Promise.all(downloads).then(() => {
-//     console.log("**************function ended");
-//   });
-
-// }
+function downloadPdf(pdfLink, dest_dir) {
+  return new Promise((resolve, reject) => {
+    var pdf = new DownloaderHelper(pdfLink, dest_dir, {
+      override: true
+    });
+    console.log("Download Starting....");
+    pdf.on('end', () => resolve());
+    pdf.start();
+  })
+}
 
 function convertDate(date){
   const formatDate = new Date(date);
   return `${formatDate.getDate()+1}/${formatDate.getMonth()+1}/${formatDate.getFullYear()}`;
 }
 
-function convertLink(str) {
-	var a = str.replace("return popup('/", "")
-	var b = a.replace("');", "")
-  var newLink = "https://www2.tjal.jus.br" + "/" + b;
+function convertLink(obj) {
+	var newLink = `https://tucujuris.tjap.jus.br/api/publico/download-diario?id=${obj.id}&numeroDiario=${obj.num_diario}&captcha=null`
   return newLink;
 }
 
@@ -123,20 +84,26 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
 
   var response = await doAxios(config);
   console.log("-------This is Axios Response Result-------\n", response.dados);
+  const pdf_lists = [];
   fs.writeFileSync('./test.txt', JSON.stringify(response.dados));
-  const $ = cheerio.load(response);
-
-/*  const downloads = [];
-  for(var i = 1; i <= nPages; i ++)
+  for(let i = 0; i <= response.dados.dados.length; i++){
+    pdf_lists.push(convertLink(response.dados.dados[i]));
+  }
+  const dest_dir = `./${message.date_ini}-${message.date_end}`;
+  if(!fs.existsSync(dest_dir)){
+    fs.mkdirSync(dest_dir);
+  }
+  const downloads = [];
+  for(var i = 0; i <= pdf_lists.length; i ++)
   {
-    downloads.push(downloadPDFsOfPage(i, response.headers['set-cookie'][0], pdf_lists, message));
+    downloads.push(downloadPdf(pdf_lists[i], dest_dir));
   }
   console.log("downloads count", downloads.length);
   console.log("------- promise start --------");
   await Promise.all(downloads).then((values) => {
     console.log("------- promise end --------");
     callback();
-  })*/  
+  })
 }
 
 async function scrapPdfCall(config, message, ambiente ) {

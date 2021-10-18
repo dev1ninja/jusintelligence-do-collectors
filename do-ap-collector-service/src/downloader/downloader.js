@@ -87,6 +87,7 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   var newResponse = JSON.parse(origin);
   console.log('This is response count: ', newResponse.dados.dados.length);
   for(let i = 0; i <= newResponse.dados.dados.length; i++){
+    console.log("This is test---------", newResponse.dados.dados[i]);
     pdf_lists.push(convertLink(newResponse.dados.dados[i]));
   }
   const dest_dir = `./${message.date_ini}-${message.date_end}`;

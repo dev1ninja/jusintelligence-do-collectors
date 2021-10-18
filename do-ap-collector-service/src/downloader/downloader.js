@@ -1,11 +1,8 @@
-// const request = require('request')
 const axios = require('axios');
-const cheerio = require('cheerio');
 const upload2aws = require('../s3bucket/upload');
 const solveCaptcha_downloads = require('../solving-captcha/solving-captcha');
-const { HOME_PAGE_URL, ORIGIN_PAGE_URL, SEARCH_URL } = require('../reqParams/urls');
+const { ORIGIN_PAGE_URL, SEARCH_URL } = require('../reqParams/urls');
 const fs = require('fs');
-const { isAsyncFunction } = require('util/types');
 const { DownloaderHelper } = require('node-downloader-helper');
 
 function doAxios(config) {

@@ -123,7 +123,7 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
 
   var response = await doAxios(config);
   console.log("-------This is Axios Response Result-------\n", response.dados);
-  fs.writeFileSync('./test.txt', response.dados);
+  fs.writeFileSync('./test.txt', JSON.stringify(response.dados));
   const $ = cheerio.load(response);
 
 /*  const downloads = [];

@@ -83,8 +83,10 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   console.log("-------This is Axios Response Result-------\n", response.dados);
   const pdf_lists = [];
   // fs.writeFileSync('./test.txt', JSON.stringify(response.dados));
-  for(let i = 0; i <= response.dados.dados.length; i++){
-    pdf_lists.push(convertLink(JSON.parse(response.dados.dados[i])));
+  var newResponse = JSON.parse(response);
+  console.log('This is response count: ', newResponse.dados.dados.length);
+  for(let i = 0; i <= newResponse.dados.dados.length; i++){
+    pdf_lists.push(convertLink(JSON.parse(newResponse.dados.dados[i])));
   }
   const dest_dir = `./${message.date_ini}-${message.date_end}`;
   if(!fs.existsSync(dest_dir)){

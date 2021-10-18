@@ -80,10 +80,11 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   };
 
   var response = await doAxios(config);
-  console.log("-------This is Axios Response Result-------\n", response.dados);
+  // console.log("-------This is Axios Response Result-------\n", response.dados);
   const pdf_lists = [];
   // fs.writeFileSync('./test.txt', JSON.stringify(response.dados));
-  var newResponse = JSON.parse(response);
+  var origin = JSON.stringify(response);
+  var newResponse = JSON.parse(origin);
   console.log('This is response count: ', newResponse.dados.dados.length);
   for(let i = 0; i <= newResponse.dados.dados.length; i++){
     pdf_lists.push(convertLink(JSON.parse(newResponse.dados.dados[i])));

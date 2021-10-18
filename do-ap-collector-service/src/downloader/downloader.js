@@ -21,7 +21,6 @@ function downloadPdf(pdfLink, dest_dir) {
     var pdf = new DownloaderHelper(pdfLink, dest_dir, {
       override: true
     });
-    console.log("Download Starting....");
     pdf.on('end', () => resolve());
     pdf.start();
   })
@@ -98,6 +97,7 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
 }
 
 async function scrapPdfCall(config, message, ambiente ) {
+  console.log("This is your message: ", message);
   console.log("---------scrapPdfCall function called!------------");
   await sendSearchRequest(config, message, ambiente, async ()=>{
     const search_result_dir = `./${message.date_ini}-${message.date_end}`;

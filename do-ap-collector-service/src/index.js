@@ -5,7 +5,7 @@ const app = express();
 app.use(cors());
 
 const port = 3000;
-let microserviceName = "do-processor-al";
+let microserviceName = "do-processor-ap";
 let ambiente = process.env.AMBIENTE || "local";
 
 springCloudConfigClient.load({
@@ -18,11 +18,12 @@ springCloudConfigClient.load({
     const consume = require("./config/kafka-consumer")(config, require("./listener/listener-search-url"), ambiente);
     console.log(consume);
     consume().catch((err) => {
-        console.error("error in consumer: ", err)
+      console.error("error in consumer: ", err);
     })
-    // const consume = async () => require("./listener/listener-search-url")(config, '{"search": "OU", "date_ini": "2021-09-13", "date_end": "2021-09-14"}', ambiente)
+    // const consume = async () => require("./listener/listener-search-url")(config, '{"search": "HABEAS CORPUS", "date_ini": "2021-09-30", "date_end": "2021-10-17"}', ambiente)
     // consume();
-    // app.listen(port, () =>
-    //     console.log(`App working at http://localhost:${port}`)
-    // );
+    app.listen(port, () =>
+        console.log(`App working at http://localhost:${port}`)
+    );
+
   }).catch(console.error)

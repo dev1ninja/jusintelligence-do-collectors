@@ -28,8 +28,8 @@ async function cloudLoad(){
 const uuid = uuid4();
 const date = new Date()
 const date_dir = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}-${uuid}`;
-const upload_pdf_path = `dev/pi/do-${date_dir}/file/`;
-const upload_json_path = `dev/pi/do-${date_dir}/row/`;
+const upload_pdf_path = `dev/ap/do-${date_dir}/file/`;
+const upload_json_path = `dev/ap/do-${date_dir}/row/`;
 const upload_await = [];
 
 const uploadFile = async (path) => { // Upload PDF files to S3 bucket

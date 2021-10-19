@@ -1,29 +1,18 @@
-const request = require('request')
 const cheerio = require('cheerio');
 const upload2aws = require('../s3bucket/upload');
 const solveCaptcha_downloads = require('../solving-captcha/solving-captcha');
 const { HOME_PAGE_URL } = require('../reqParams/urls');
+const doRequest = require('./doRequest');
+const convertLink = require('./convert-link');
+const convertDate = require('./convert-date');
 
 var pdf_lists = []
 var pdf_name = 0;
-
-function doRequest(options) {
-  return new Promise(function (resolve, reject) {
-    request(options, function (error, res) {
-      if (!error && res.statusCode == 200) {
-        resolve(res);
-      } else {
-        reject(error);
-      }
-    });
-  });
-}
 
 async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){ //to get the response per page
 
   console.log("---------downloadPDFsofPage function called!------------");
 
-  console.log("download page : ", page);
   var options = {
     'method': 'POST',
     'url': 'https://www2.tjal.jus.br/cdje/trocaDePagina.do',
@@ -60,26 +49,14 @@ async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){
   });
 
   await Promise.all(downloads).then(() => {
-    console.log("**************function ended");
+    console.log("--------Download PDF per paginations--------");
   });
 
 }
 
-function convertDate(date){
-  const formatDate = new Date(date);
-  return `${formatDate.getDate()+1}/${formatDate.getMonth()+1}/${formatDate.getFullYear()}`;
-}
-
-function convertLink(str) {
-	var a = str.replace("return popup('/", "")
-	var b = a.replace("');", "")
-  var newLink = "https://www2.tjal.jus.br" + "/" + b;
-  return newLink;
-}
-
 async function sendSearchRequest(config, search_url, message, ambiente, callback){ // this is first download
   console.log("---------sendSearchRequest function called!------------");
-  console.log("This is search value ----------------", message);
+  console.log("This is received message----------------", message);
   const options = {
     'method': 'POST',
     'url': 'https://www2.tjal.jus.br/cdje/consultaAvancada.do',
@@ -122,10 +99,9 @@ async function sendSearchRequest(config, search_url, message, ambiente, callback
   {
     downloads.push(downloadPDFsOfPage(i, response.headers['set-cookie'][0], pdf_lists, search_url, message));
   }
-  console.log("downloads count", downloads.length);
-  console.log("------- promise start --------");
+  console.log("------- PDF download start --------");
   await Promise.all(downloads).then((values) => {
-    console.log("------- promise end --------");
+    console.log("------- PDF download finished --------");
     callback();
   })
   
@@ -137,13 +113,13 @@ async function scrapPdfCall(config, search_url, message, ambiente ) {
     const search_result_dir = `./${message.date_ini}-${message.date_end}`;
     console.log("This is directory: ", search_result_dir);
     const sendJsonData = await upload2aws(search_result_dir);
-    for(var i = 0; i < sendJsonData.length; i++){
+    for(let i = 0; i < sendJsonData.length; i++){
       sendJsonData[i]["uf"] = "AL";
       sendJsonData[i]["search"] = message.search;
     }
     const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
     producer().catch( err => {
-        console.error("error in consumer: ", err)
+      console.error("error in consumer: ", err)
     })
   });
   

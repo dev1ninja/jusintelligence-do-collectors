@@ -5,8 +5,8 @@ const app = express();
 app.use(cors());
 
 const port = 3000;
-let microserviceName = "do-processor-pa"
-let ambiente = process.env.AMBIENTE || "local"
+let microserviceName = "do-processor-pa";
+let ambiente = process.env.AMBIENTE || "local";
 
 springCloudConfigClient.load({
     endpoint: 'https://scc-dev.dataseed.de:443',

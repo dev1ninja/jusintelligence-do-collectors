@@ -1,35 +1,9 @@
-const axios = require('axios');
 const upload2aws = require('../s3bucket/upload');
 const { ORIGIN_PAGE_URL, SEARCH_URL } = require('../reqParams/urls');
 const fs = require('fs');
-const { DownloaderHelper } = require('node-downloader-helper');
-
-function doAxios(config) {
-  return new Promise(function (resolve, reject) {
-    axios(config)
-    .then(response => {
-      resolve(response.data);
-    })
-    .catch(error => {
-      reject(error);
-    })
-  });
-}
-
-function downloadPdf(pdfLink, dest_dir) {
-  return new Promise((resolve, reject) => {
-    var pdf = new DownloaderHelper(pdfLink, dest_dir, {
-      override: true
-    });
-    pdf.on('end', () => resolve());
-    pdf.start();
-  })
-}
-
-function convertLink(obj) {
-	var newLink = `https://tucujuris.tjap.jus.br/api/publico/download-diario?id=${obj.id}&numeroDiario=${obj.num_diario}&captcha=null`
-  return newLink;
-}
+const doAxios = require('./doAxios');
+const downloadPdf = require('./download-pdf');
+const convertLink = require('./convert-link');
 
 async function sendSearchRequest(config, message, ambiente, callback){ // this is first download
 
@@ -76,7 +50,6 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   const pdf_lists = [];
   console.log('This is response count: ', response.dados.dados.length);
   for(let i = 0; i < response.dados.dados.length; i++){
-    console.log("This is test---------", response.dados.dados[i]);
     pdf_lists.push(convertLink(response.dados.dados[i]));
   }
   const dest_dir = `./${message.date_ini}-${message.date_end}`;
@@ -96,14 +69,14 @@ async function sendSearchRequest(config, message, ambiente, callback){ // this i
   })
 }
 
-async function scrapPdfCall(config, message, ambiente ) {
+async function main(config, message, ambiente ) {
   console.log("This is your message: ", message);
-  console.log("---------scrapPdfCall function called!------------");
-  await sendSearchRequest(config, message, ambiente, async ()=>{
+  console.log("---------main function called!------------");
+  await sendSearchRequest(config, message, ambiente, async () => {
     const search_result_dir = `./${message.date_ini}-${message.date_end}`;
     console.log("This is directory: ", search_result_dir);
     const sendJsonData = await upload2aws(search_result_dir);
-    for(var i = 0; i < sendJsonData.length; i++){
+    for(let i = 0; i < sendJsonData.length; i++){
       sendJsonData[i]["uf"] = "AP";
       sendJsonData[i]["search"] = message.search;
     }
@@ -112,7 +85,6 @@ async function scrapPdfCall(config, message, ambiente ) {
         console.error("error in consumer: ", err)
     })
   });
-  
 }
 
-module.exports = scrapPdfCall;
+module.exports = main;

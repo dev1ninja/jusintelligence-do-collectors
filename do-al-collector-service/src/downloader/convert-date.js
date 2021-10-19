@@ -1,6 +1,6 @@
 function convertDate(date){
-  const formatDate = new Date(date);
-  return `${formatDate.getDate()+1}/${formatDate.getMonth()+1}/${formatDate.getFullYear()}`;
+  const parseDate = date.split('-');
+  return `${parseDate[2]}/${parseDate[1]}/${parseDate[0]}`;
 }
 
 module.exports = convertDate;

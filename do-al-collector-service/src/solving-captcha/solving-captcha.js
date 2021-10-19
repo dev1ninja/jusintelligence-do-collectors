@@ -13,7 +13,7 @@ const { ACCESS_TOKEN, SITE_KEY } = require('../reqParams/recaptcha-info');
 async function doRequest(options) {
   return new Promise(async function (resolve, reject) {
     await request(options, function (error, res) {
-      if (!error && res.statusCode == 200) {
+      if (!error && res.statusCode === 200) {
         resolve(res);
       } else {
         reject(error);
@@ -25,7 +25,7 @@ async function doRequest(options) {
 async function doRequest_body(options) {
   return new Promise(async function (resolve, reject) {
     await request(options, function (error, res) {
-      if (!error && res.statusCode == 200) {
+      if (!error && res.statusCode === 200) {
         resolve(res.body);
       } else {
         reject(error);
@@ -133,11 +133,10 @@ async function getUuid_downloads_pdf(page_url, token, cookie, message, pdf_name)
   var writeStream = fs.createWriteStream(`./${search_result_dir}/${pdf_name}.pdf`);
   response_pdf.data.pipe(writeStream);
   await finished(writeStream);
-  console.log("Success read PDF...");
+  console.log("Success write PDF...");
 }
 
 async function solveCaptcha_downloads(page_url, message, pdf_name){
-  console.log("This is Page url\n", page_url);
 
   bestcaptchasolver.set_access_token(ACCESS_TOKEN);
 
@@ -161,8 +160,7 @@ async function solveCaptcha_downloads(page_url, message, pdf_name){
   }).catch( err => {
     console.log(`Error: ${err.message || err}`);
   }).then( () => {
-    console.log(`Example finished !`);
+    console.log("----------------Finished solving captcha!");
   });
-  console.log("----------------Ended Solve Captcha");
 }
 module.exports = solveCaptcha_downloads;

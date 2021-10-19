@@ -13,7 +13,6 @@ async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){
 
   console.log("---------downloadPDFsofPage function called!------------");
 
-  console.log("download page : ", page);
   var options = {
     'method': 'POST',
     'url': 'https://www2.tjal.jus.br/cdje/trocaDePagina.do',
@@ -50,14 +49,14 @@ async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){
   });
 
   await Promise.all(downloads).then(() => {
-    console.log("**************function ended");
+    console.log("--------Download PDF per paginations--------");
   });
 
 }
 
 async function sendSearchRequest(config, search_url, message, ambiente, callback){ // this is first download
   console.log("---------sendSearchRequest function called!------------");
-  console.log("This is search value ----------------", message);
+  console.log("This is received message----------------", message);
   const options = {
     'method': 'POST',
     'url': 'https://www2.tjal.jus.br/cdje/consultaAvancada.do',
@@ -100,10 +99,9 @@ async function sendSearchRequest(config, search_url, message, ambiente, callback
   {
     downloads.push(downloadPDFsOfPage(i, response.headers['set-cookie'][0], pdf_lists, search_url, message));
   }
-  console.log("downloads count", downloads.length);
-  console.log("------- promise start --------");
+  console.log("------- PDF download start --------");
   await Promise.all(downloads).then((values) => {
-    console.log("------- promise end --------");
+    console.log("------- PDF download finished --------");
     callback();
   })
   
@@ -115,7 +113,7 @@ async function scrapPdfCall(config, search_url, message, ambiente ) {
     const search_result_dir = `./${message.date_ini}-${message.date_end}`;
     console.log("This is directory: ", search_result_dir);
     const sendJsonData = await upload2aws(search_result_dir);
-    for(var i = 0; i < sendJsonData.length; i++){
+    for(let i = 0; i < sendJsonData.length; i++){
       sendJsonData[i]["uf"] = "AL";
       sendJsonData[i]["search"] = message.search;
     }

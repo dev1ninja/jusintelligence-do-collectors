@@ -117,10 +117,10 @@ async function scrapPdfCall(config, search_url, message, ambiente ) {
       sendJsonData[i]["uf"] = "AL";
       sendJsonData[i]["search"] = message.search;
     }
-    // const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
-    // producer().catch( err => {
-    //     console.error("error in consumer: ", err)
-    // })
+    const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
+    producer().catch( err => {
+      console.error("error in consumer: ", err)
+    })
   });
   
 }

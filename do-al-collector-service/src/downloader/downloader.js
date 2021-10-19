@@ -1,23 +1,13 @@
-const request = require('request')
 const cheerio = require('cheerio');
 const upload2aws = require('../s3bucket/upload');
 const solveCaptcha_downloads = require('../solving-captcha/solving-captcha');
 const { HOME_PAGE_URL } = require('../reqParams/urls');
+const doRequest = require('./doRequest');
+const convertLink = require('./convert-link');
+const convertDate = require('./convert-date');
 
 var pdf_lists = []
 var pdf_name = 0;
-
-function doRequest(options) {
-  return new Promise(function (resolve, reject) {
-    request(options, function (error, res) {
-      if (!error && res.statusCode == 200) {
-        resolve(res);
-      } else {
-        reject(error);
-      }
-    });
-  });
-}
 
 async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){ //to get the response per page
 
@@ -63,18 +53,6 @@ async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){
     console.log("**************function ended");
   });
 
-}
-
-function convertDate(date){
-  const formatDate = new Date(date);
-  return `${formatDate.getDate()+1}/${formatDate.getMonth()+1}/${formatDate.getFullYear()}`;
-}
-
-function convertLink(str) {
-	var a = str.replace("return popup('/", "")
-	var b = a.replace("');", "")
-  var newLink = "https://www2.tjal.jus.br" + "/" + b;
-  return newLink;
 }
 
 async function sendSearchRequest(config, search_url, message, ambiente, callback){ // this is first download

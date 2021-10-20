@@ -8,7 +8,7 @@ module.exports = (ambiente) => {
             res.send(req.body)
             const producer = require("../config/kafka-producer")(req.body, ambiente);
             producer().catch((err) => {
-                console.error("error in consumer: ", err)
+                console.error("error in producer: ", err)
             })
         });
     return router;

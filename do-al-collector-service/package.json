@@ -1,7 +1,7 @@
 {
-  "name": "microservice-model",
+  "name": "do-al-collector-service",
   "version": "1.0.0",
-  "description": "Microservice template for webcrawlers",
+  "description": "Microservice DO Alagoas",
   "main": "index.js",
   "scripts": {
     "test": "jest",

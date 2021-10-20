@@ -82,7 +82,7 @@ async function main(config, message, ambiente ) {
     }
     const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
     producer().catch( err => {
-        console.error("error in consumer: ", err)
+        console.error("error in producer: ", err)
     })
   });
 }

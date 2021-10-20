@@ -3,7 +3,7 @@ const convertDate = require('./convert_date');
 const doAxios = require('./doAxios');
 const getPdfLink = require('./get_pdf_link');
 const { ORIGIN_PAGE_URL, SEARCH_PAGE_URL } = require('../reqParams/urls');
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 async function getPdfLists(message) {
 

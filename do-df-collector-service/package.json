@@ -1,7 +1,7 @@
 {
-  "name": "do-pi-collector-service",
+  "name": "do-df-collector-service",
   "version": "1.0.0",
-  "description": "Microservice DO Piaui",
+  "description": "Microservice DO - DF",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -14,24 +14,30 @@
     "axios": "^0.21.4",
     "axios-cookiejar-support": "^2.0.0",
     "axios-middleware": "^0.3.1",
+    "bestcaptchasolver": "^1.1.1",
     "cheerio": "^1.0.0-rc.10",
     "cloud-config-client": "^1.5.2",
     "cors": "^2.8.5",
+    "decache": "^4.6.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "got": "^11.8.2",
+    "jquery": "^3.6.0",
     "jsdom": "^17.0.0",
     "kafkajs": "^1.15.0",
     "knex": "^0.95.11",
     "mysql": "^2.18.1",
     "node-downloader-helper": "^1.0.18",
+    "path": "^0.12.7",
     "postgres": "^1.0.2",
     "puppeteer": "^10.4.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "request-promise-native": "^1.0.9",
+    "stream": "0.0.2",
     "tough": "^0.6.0",
     "tough-cookie-file-store": "^2.0.2",
+    "url2pdf": "^0.4.7",
     "util": "^0.12.4",
     "uuid": "^8.3.2",
     "uuid4": "^2.0.2"
@@ -39,15 +45,10 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^16.9.6",
-    "jest": "^27.2.4",
+    "jest": "^27.3.1",
     "jest-mock-axios": "^4.4.0",
     "nodemon": "^2.0.12",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "./tests"
-    ]
   }
 }

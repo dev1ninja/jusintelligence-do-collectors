@@ -1,7 +1,7 @@
 {
-  "name": "microservice-model",
+  "name": "do-ap-collector-service",
   "version": "1.0.0",
-  "description": "Microservice template for webcrawlers",
+  "description": "Microservice DO - AP",
   "main": "index.js",
   "scripts": {
     "test": "jest",

@@ -35,7 +35,7 @@ async function index( config, message, ambiente ) {
     const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
 
     for(let i = 0; i < sendJsonData.length; i++){
-      sendJsonData[i]['uf'] = 'PE';
+      sendJsonData[i]['uf'] = 'DF';
       sendJsonData[i]['search'] = message.search;
     } // Finished to upload.
 

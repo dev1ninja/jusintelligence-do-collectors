@@ -1,7 +1,7 @@
 {
-  "name": "do-pe-collector-service",
+  "name": "do-df-collector-service",
   "version": "1.0.0",
-  "description": "Microservice DO - PE",
+  "description": "Microservice DO - DF",
   "main": "index.js",
   "scripts": {
     "test": "jest",

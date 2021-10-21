@@ -1,5 +1,5 @@
-function getPdfLink(obj) {
-  var url = obj.urlDiario.split('#')[0];
+function getPdfLink(str) {
+  var url = str.split('#')[0];
   return url;
 }
 module.exports = getPdfLink;

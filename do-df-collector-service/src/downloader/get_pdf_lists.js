@@ -25,7 +25,7 @@ function run(i, message) {
     const response = await doAxios(config);
     for(let j = 0; j < response.documentos.length; j++){
       if(!pdf_lists.includes(getPdfLink(response.documentos[j]))){
-        pdf_lists.push(getPdfLink(response.documentos[j]));
+        pdf_lists.push(getPdfLink(response.documentos[j].urlDiario));
       }
     }
     resolve();

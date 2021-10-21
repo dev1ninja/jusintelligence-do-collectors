@@ -41,8 +41,6 @@ async function getPdfLists(totalPage, message) {
   await Promise.all(downloads).then(value => {
     console.log('------------- Finished to get the PDF lists. --------------');
   })
-  console.log('PDF count: ',pdf_lists.length);
-  console.log(pdf_lists);
   return pdf_lists;
 }
 

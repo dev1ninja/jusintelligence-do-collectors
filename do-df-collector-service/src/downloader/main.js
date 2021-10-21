@@ -6,6 +6,9 @@ const getPdfLists = require('./get_pdf_lists');
 const { ORIGIN_URL, REFERER_URL} = require('../reqParams/urls');
 
 async function main( message, dest_dir, callback ) {
+
+  var pdf_lists;
+
   console.log(`https://pesquisadje-api.tjdft.jus.br/v1/buscador?query=${message.search}&pagina=0&dataInicio=${message.date_ini}&dataFim=${message.date_end}`);
   var config = {
     method: 'get',
@@ -32,22 +35,24 @@ async function main( message, dest_dir, callback ) {
     console.log("---------- There is no search result. ----------");
     return ;
   } else {
-    await getPdfLists(response.totalPaginas, message);
+    pdf_lists = await getPdfLists(response.totalPaginas, message);
   }
 
-  // const downloads = [];
+  console.log('PDF count: ',pdf_lists.length);
 
-  // console.log('This is Pdf link: ', pdf_lists);
+  const downloads = [];
 
-  // for(let i = 0; i < pdf_lists.length; i++){
-  //   downloads.push(downloadPdf(pdf_lists[i], dest_dir));
-  // }
+  console.log('This is Pdf link: ', pdf_lists);
 
-  // console.log("------- PDF downloading started -------\n");
-  // await Promise.all(downloads).then(value => {
-  //   console.log("------- PDF downloading finished -------\n");
-  //   callback();
-  // })
+  for(let i = 0; i < pdf_lists.length; i++){
+    downloads.push(downloadPdf(pdf_lists[i], dest_dir));
+  }
+
+  console.log("------- PDF downloading started -------\n");
+  await Promise.all(downloads).then(value => {
+    console.log("------- PDF downloading finished -------\n");
+    callback();
+  })
 }
 
 async function index( config, message, ambiente ) {
@@ -61,20 +66,19 @@ async function index( config, message, ambiente ) {
 
   await main( message, dest_dir, async () => {
 
-    // const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
+    const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
 
-    // for(let i = 0; i < sendJsonData.length; i++){
-    //   sendJsonData[i]['uf'] = 'DF';
-    //   sendJsonData[i]['search'] = message.search;
-    // } // Finished to upload.
+    for(let i = 0; i < sendJsonData.length; i++){
+      sendJsonData[i]['uf'] = 'DF';
+      sendJsonData[i]['search'] = message.search;
+    } // Finished to upload.
 
-    // console.log("-----------------------")
-    // const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic
+    console.log("-----------------------");
+    const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic
 
-    // producer().catch( err => {
-    //   console.error("erro in producer: ", err);
-    // });
-
+    producer().catch( err => {
+      console.error("erro in producer: ", err);
+    });
   });
   
 }

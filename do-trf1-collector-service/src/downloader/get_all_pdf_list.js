@@ -1,6 +1,5 @@
 const cheerio = require('cheerio');
 const convertLink = require('./convert_link');
-const getPdfLink = require('./get_pdf_link');
 
 function getAllPdfList(response) {
   var pdf_lists = {};

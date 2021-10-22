@@ -31,28 +31,23 @@ async function main( message, dest_dir, callback ) {
 
   const response = await doAxios(config);
 
-  if(response.documentos.length === 0){
-    console.log("---------- There is no search result. ----------");
-    return ;
-  } else {
-    pdf_lists = await getPdfLists(response.totalPaginas, message);
-  }
+  // const pdf_lists = await getPdfLists(response.totalPaginas, message);
 
-  console.log('PDF count: ',pdf_lists.length);
+  // console.log('PDF count: ',pdf_lists.length);
 
-  const downloads = [];
+  // const downloads = [];
 
-  console.log('This is Pdf link: ', pdf_lists);
+  // console.log('This is Pdf link: ', pdf_lists);
 
-  for(let i = 0; i < pdf_lists.length; i++){
-    downloads.push(downloadPdf(pdf_lists[i], dest_dir));
-  }
+  // for(let i = 0; i < pdf_lists.length; i++){
+  //   downloads.push(downloadPdf(pdf_lists[i], dest_dir));
+  // }
 
-  console.log("------- PDF downloading started -------\n");
-  await Promise.all(downloads).then(value => {
-    console.log("------- PDF downloading finished -------\n");
-    callback();
-  })
+  // console.log("------- PDF downloading started -------\n");
+  // await Promise.all(downloads).then(value => {
+  //   console.log("------- PDF downloading finished -------\n");
+  //   callback();
+  // })
 }
 
 async function index( config, message, ambiente ) {
@@ -66,19 +61,19 @@ async function index( config, message, ambiente ) {
 
   await main( message, dest_dir, async () => {
 
-    const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
+    // const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
 
-    for(let i = 0; i < sendJsonData.length; i++){
-      sendJsonData[i]['uf'] = 'DF';
-      sendJsonData[i]['search'] = message.search;
-    } // Finished to upload.
+    // for(let i = 0; i < sendJsonData.length; i++){
+    //   sendJsonData[i]['uf'] = 'TRF1';
+    //   sendJsonData[i]['search'] = message.search;
+    // } // Finished to upload.
 
-    console.log("-----------------------");
-    const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic
+    // console.log("-----------------------");
+    // const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic
 
-    producer().catch( err => {
-      console.error("erro in producer: ", err);
-    });
+    // producer().catch( err => {
+    //   console.error("erro in producer: ", err);
+    // });
   });
   
 }

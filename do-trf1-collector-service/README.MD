@@ -10,7 +10,7 @@ docker run --name kafka-server1 --network kafka-net -e ALLOW_PLAINTEXT_LISTENER=
 ```
 
 
-3 - Create a topic "do_processor_df_local". (We will send msg via this topic at first and project will consume msg from this topic)
+3 - Create a topic "do_processor_trf1_local". (We will send msg via this topic at first and project will consume msg from this topic)
 <br/>
 Execute this command in terminal to create a topic:
 ```
@@ -19,7 +19,7 @@ docker exec -ti kafka-server1 \
   --zookeeper zookeeper-server:2181 \
   --replication-factor 1 \
   --partitions 1 \
-  --topic do_processor_df_local
+  --topic do_processor_trf1_local
 ```
 <br/>
 
@@ -29,7 +29,7 @@ docker exec -ti kafka-server1 \
   /opt/bitnami/kafka/bin/kafka-console-producer.sh \
   --request-required-acks 1 \
   --broker-list localhost:9092 \
-  --topic do_processor_df_local
+  --topic do_processor_trf1_local
 ```
 
 5 - Create a topic "do_processor_final_local".
@@ -49,5 +49,5 @@ docker exec -ti kafka-server1 \
 docker exec -ti kafka-server1 \
   /opt/bitnami/kafka/bin/kafka-topics.sh --delete \
   --zookeeper zookeeper-server:2181 \
-  --topic do_processor_df_local
+  --topic do_processor_trf1_local
 ```

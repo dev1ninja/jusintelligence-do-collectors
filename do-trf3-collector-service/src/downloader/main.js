@@ -1,12 +1,16 @@
 const fs = require('fs');
 const getAllDateList = require('./getAllfDateList');
+const getPdfListPerMonth = require('./getPdfListPerMonth');
 const doAxios = require('./doAxios');
 const downloadPdf = require('./download-pdf');
 const upload2aws = require('../s3bucket/upload');
 
 async function main( message, dest_dir, callback ) {
 
-  await getAllDateList();
+  const allDateList = await getAllDateList();
+  console.log(allDateList);
+
+  await getPdfListPerMonth(allDateList[3]);
 
   // const response = await doAxios(config);
 

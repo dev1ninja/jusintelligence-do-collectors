@@ -25,19 +25,19 @@ async function main( message, dest_dir, callback ) {
 
   console.log(allPdfList.length, allPdfList);
 
-  // const downloads = [];
+  const downloads = [];
 
   // // console.log('This is Pdf link: ', pdf_lists);
 
-  // for(let i = 0; i < download_pdf_list.length; i++){
-  //   downloads.push(downloadPdf(download_pdf_list[i], dest_dir));
-  // }
+  for(let i = 0; i < allPdfList.length; i++){
+    downloads.push(downloadPdf(allPdfList[i].value, dest_dir));
+  }
 
-  // console.log("------- PDF downloading started -------\n");
-  // await Promise.all(downloads).then(value => {
-  //   console.log("------- PDF downloading finished -------\n");
-  //   callback();
-  // })
+  console.log("------- PDF downloading started -------\n");
+  await Promise.all(downloads).then(value => {
+    console.log("------- PDF downloading finished -------\n");
+    callback();
+  })
 }
 
 async function index( config, message, ambiente ) {

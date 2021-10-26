@@ -22,7 +22,9 @@ async function getPdfListPerMonth(link){
   const response = await doAxios(config);
   const $ = cheerio.load(response);
 
-  $('#container').find('#conteudoPrincipal > div > ')
+  $('#container').find('#conteudoPrincipal > div > ul > li').each((idx, elem) => {
+    console.log($(elem).find('a').attr('href'));
+  })
 
 }
 

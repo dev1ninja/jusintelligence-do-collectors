@@ -8,6 +8,7 @@ const cookieJar = new tough.CookieJar();
 axios.defaults.jar = cookieJar;
 
 function getAllDateList(){
+  console.log('Called')
   var allDateList = [];
   var config = {
     method: 'get',

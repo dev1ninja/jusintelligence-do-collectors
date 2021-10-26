@@ -1,8 +1,15 @@
 const doAxios = require('./doAxios');
 const cheerio = require('cheerio');
+const convertLink = require('./convertLink');
+const convertDate = require('./convertDate');
 
-async function getPdfListPerMonth(link){
+async function getPdfListPerMonth(link, allPdfList, message){
   console.log("Get PDF List Per Month function called.");
+
+  var date_ini = new Date(message.date_ini);
+  var date_end = new Date(message.date_end);
+  console.log(date_ini)
+  console.log(date_end)
 
   var config = {
     method: 'get',
@@ -16,16 +23,30 @@ async function getPdfListPerMonth(link){
       'Accept-Language': 'en-US,en;q=0.9',
     }
   };
-
-  console.log("Config: ", config);
   
   const response = await doAxios(config);
   const $ = cheerio.load(response);
 
-  $('#container').find('#conteudoPrincipal > div > ul > li').each((idx, elem) => {
-    console.log($(elem).find('a').attr('href'));
+  $('#container > #conteudoPrincipal > div > div > ul > li').each((idx, elem) => {
+    var key = convertDate($(elem).find('a').text().split(' ')[0]);
+    var href = convertLink($(elem).find('a').attr('href'));
+    allPdfList.push({key:`${key}`, value: href});
   })
-
+  var i = 0;
+  while( i < allPdfList.length ) {
+    console.log("All PDf List Length: ", allPdfList.length);
+    var newDate = new Date(allPdfList[i].key);
+    if(newDate < date_ini){
+      allPdfList.splice(i, 1);
+      console.log("Date Ini: ", newDate)
+    } else if(newDate > date_end){
+      allPdfList.splice(i, 1);
+      console.log("Date End", newDate)
+    } else {
+      ++i;
+    }
+  }
+  return allPdfList;
 }
 
 module.exports = getPdfListPerMonth;

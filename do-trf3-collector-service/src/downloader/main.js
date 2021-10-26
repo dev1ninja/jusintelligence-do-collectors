@@ -1,6 +1,7 @@
 const fs = require('fs');
 const getAllDateList = require('./getAllfDateList');
 const getPdfListPerMonth = require('./getPdfListPerMonth');
+const getSearchDateList = require('./getSearchDateList');
 const doAxios = require('./doAxios');
 const downloadPdf = require('./download-pdf');
 const upload2aws = require('../s3bucket/upload');
@@ -8,24 +9,21 @@ const upload2aws = require('../s3bucket/upload');
 async function main( message, dest_dir, callback ) {
 
   const allDateList = await getAllDateList();
-  console.log(allDateList);
+  // console.log(allDateList);
 
-  await getPdfListPerMonth(allDateList[3]);
+  const searchDateList = getSearchDateList(message, allDateList);
+  // console.log(searchDateList);
 
-  // const response = await doAxios(config);
+  const promiseList = [];
+  const allPdfList = [];
 
-  // const all_pdf_list = getAllPdfList(response);
+  for(let i = 0; i < searchDateList.length; i++){
+    promiseList.push(await getPdfListPerMonth(searchDateList[i], allPdfList, message))
+  }
 
-  // const download_pdf_list = getPdfList(message, all_pdf_list);
+  await Promise.all(promiseList);
 
-  // console.log('Date Ini: ', Date.parse(message.date_ini));
-  // console.log('Date End: ', Date.parse(message.date_end));
-  // // console.log('Download PDF Link: ', download_pdf_list);
-
-  // if(download_pdf_list.length === 0){
-  //   console.log("-------- :( There is no search result. ---------");
-  //   return ;
-  // }
+  console.log(allPdfList.length, allPdfList);
 
   // const downloads = [];
 

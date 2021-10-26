@@ -23,17 +23,13 @@ async function main( message, dest_dir, callback ) {
 
   await Promise.all(promiseList);
 
-  console.log(allPdfList.length, allPdfList);
-
   const downloads = [];
-
-  // // console.log('This is Pdf link: ', pdf_lists);
-
+  console.log(allPdfList.length)
   for(let i = 0; i < allPdfList.length; i++){
     downloads.push(downloadPdf(allPdfList[i].value, dest_dir));
   }
 
-  console.log("------- PDF downloading started -------\n");
+  console.log("------- PDF downloading started -------\n", downloads.length);
   await Promise.all(downloads).then(value => {
     console.log("------- PDF downloading finished -------\n");
     callback();

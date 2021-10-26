@@ -37,10 +37,10 @@ async function getPdfListPerMonth(link, allPdfList, message){
     var newDate = new Date(allPdfList[i].key);
     if(newDate < date_ini){
       allPdfList.splice(i, 1);
-      console.log("Date Ini: ", newDate)
+      // console.log("Date Ini: ", newDate)
     } else if(newDate > date_end){
       allPdfList.splice(i, 1);
-      console.log("Date End", newDate)
+      // console.log("Date End", newDate)
     } else {
       ++i;
     }

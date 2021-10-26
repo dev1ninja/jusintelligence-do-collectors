@@ -34,7 +34,6 @@ async function getPdfListPerMonth(link, allPdfList, message){
   })
   var i = 0;
   while( i < allPdfList.length ) {
-    console.log("All PDf List Length: ", allPdfList.length);
     var newDate = new Date(allPdfList[i].key);
     if(newDate < date_ini){
       allPdfList.splice(i, 1);

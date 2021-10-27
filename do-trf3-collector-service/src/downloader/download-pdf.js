@@ -22,11 +22,11 @@ function downloadPdf(pdfLink, dest_dir){
       var writeStream = fs.createWriteStream(`${dest_dir}/${response.headers['content-disposition'].split("filename=")[1]}`);
       response.data.pipe(writeStream);
       finished(writeStream);
-      resolve();
+      resolve('Success!');
     })
     .catch(function (error) {
       console.log("There is no article in this link: ", pdfLink);
-      reject(error);
+      resolve('Failed');
     });
   })
 }

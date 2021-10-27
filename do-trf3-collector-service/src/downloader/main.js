@@ -31,6 +31,7 @@ async function main( message, dest_dir, callback ) {
 
   console.log("------- PDF downloading started -------\n", downloads.length);
   await Promise.all(downloads).then(value => {
+    console.log(value);
     console.log("------- PDF downloading finished -------\n");
     callback();
   })
@@ -54,12 +55,12 @@ async function index( config, message, ambiente ) {
       sendJsonData[i]['search'] = message.search;
     } // Finished to upload.
 
-    // console.log("-----------------------");
-    // const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic
+    console.log("-----------------------");
+    const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic
 
-    // producer().catch( err => {
-    //   console.error("erro in producer: ", err);
-    // });
+    producer().catch( err => {
+      console.error("erro in producer: ", err);
+    });
   });
   
 }

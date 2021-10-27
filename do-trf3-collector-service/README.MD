@@ -41,7 +41,7 @@ docker exec -ti kafka-server1 \
 
 7 - To send the message type a JSON like this in terminal: -> check step 4
 ```
-{"search": "something", "date_ini": "2021-10-16", "date_end": "2021-10-18"}
+{"search": "something", "date_ini": "2021-10-11", "date_end": "2021-10-18"}
 ```
 
 8 - Removing the topic:

@@ -47,12 +47,12 @@ async function index( config, message, ambiente ) {
 
   await main( message, dest_dir, async () => {
 
-    // const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
+    const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
 
-    // for(let i = 0; i < sendJsonData.length; i++){
-    //   sendJsonData[i]['uf'] = 'TRF3';
-    //   sendJsonData[i]['search'] = message.search;
-    // } // Finished to upload.
+    for(let i = 0; i < sendJsonData.length; i++){
+      sendJsonData[i]['uf'] = 'TRF3';
+      sendJsonData[i]['search'] = message.search;
+    } // Finished to upload.
 
     // console.log("-----------------------");
     // const producer = require('../config/kafka-producer')(ambiente, sendJsonData); // Start to send message to `do_processor_final_<env>` kafka topic

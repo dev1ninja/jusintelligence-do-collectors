@@ -1,66 +1,67 @@
 const fs = require('fs');
 const qs = require('qs');
+const getDateList = require('./getDateList');
 const getFirstResponse = require('./getFirstResponse');
 const getViewState = require('./getViewState');
 const getEventValidation = require('./getEventValidation');
+const getDate = require('./getDate');
 const convertDate = require('./convertDate');
 const doAxios = require('./doAxios');
-const getPdfList = require('./getPdfList');
 const downloadPdf = require('./download-pdf');
 const upload2aws = require('../s3bucket/upload');
-const getAllPdfList = require('./getPdfList');
-const { ORIGIN, URL } = require('../reqParams/urls');
+const { FILTER_PAGE_URL, SEARCH_PAGE_URL } = require('../reqParams/urls');
+const getToken = require('./getToken');
 
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+
+
+// const virtualConsole = new jsdom.VirtualConsole();
+/*
+async function loadSearchQueryPage(){
+  var resourceLoader = new jsdom.ResourceLoader({
+    strictSSL: false
+  })
+  return new Promise(async (resolve, reject) => {
+    JSDOM.fromURL(FILTER_PAGE_URL, {
+      referrer: SEARCH_PAGE_URL,
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
+      includeNodeLocations: true,
+      storageQuota: 10000000,
+      runScripts: 'dangerously',
+      resources: resourceLoader,
+      virtualConsole,
+      cookieJar,
+    }).then(dom => {
+      resolve(dom);
+    }).catch(error => {
+      reject(error);
+    })
+  })
+}
+
+function loadJquery(dom){
+  delete require.cache[require.resolve('jquery')]
+  global.window = dom.window;
+  global.document = dom.window.document;
+  global.$ = require('jquery');
+}
+*/
 async function main( message, dest_dir, callback ) {
 
-  const download_pdf_list = [];
+  const dateList = getDateList(message);
+  console.log(dateList);
 
-  const firstRes = await getFirstResponse();
+  const response = await getFirstResponse();
 
-  const viewState = getViewState(firstRes);
+  var viewState = getViewState(response);
+  var eventValidation = getEventValidation(response);
+  var curDate = getDate(response);
+  var pdfList = [];
+  console.log("asdfasdf",curDate)
 
-  const eventValidation = getEventValidation(firstRes);
+  await getToken(viewState, eventValidation, dateList, 0, pdfList, curDate);
 
-  var data = qs.stringify({
-    'ctl00$ScriptManager': 'ctl00$ContentPlaceHolder$ctrListaDiarios$UpdatePanel1|ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$btnFiltrar',
-    '__EVENTTARGET': '',
-    '__EVENTARGUMENT': '',
-    '__LASTFOCUS': '',
-    '__VIEWSTATE': viewState,
-    '__EVENTVALIDATION': eventValidation,
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$ddlAreaJudicial': '4',
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$tbxDataInicial': convertDate(message.date_ini),
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$meeDataInicial_ClientState': '',
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$tbxDataFinal': convertDate(message.date_end),
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$meeDataFinal_ClientState': '',
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$ddlRegistrosPaginas': '50',
-    'ctl00$ContentPlaceHolder$ctrListaDiarios$FiltraPesquisaDiarios$btnFiltrar': 'Pesquisar' 
-  });
-  var config = {
-    method: 'post',
-    url: URL,
-    headers: { 
-      'Connection': 'keep-alive', 
-      'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"', 
-      'Cache-Control': 'no-cache', 
-      'Content-Type': 'application/x-www-form-urlencoded', 
-      'X-MicrosoftAjax': 'Delta=true', 
-      'sec-ch-ua-mobile': '?0', 
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36', 
-      'Accept': '*/*', 
-      'Origin': ORIGIN, 
-      'Sec-Fetch-Site': 'same-origin', 
-      'Sec-Fetch-Mode': 'cors', 
-      'Sec-Fetch-Dest': 'empty', 
-      'Referer': URL, 
-      'Accept-Language': 'en-US,en;q=0.9'
-    },
-    data : data
-  };
-
-  const response = await doAxios(config);
-
-  await getPdfList(response, 0, download_pdf_list);
+  // await getPdfList(response, 0, download_pdf_list);
   // const all_pdf_list = getAllPdfList(response);
 
   // const download_pdf_list = getPdfList(message, all_pdf_list);
@@ -81,7 +82,6 @@ async function main( message, dest_dir, callback ) {
   // for(let i = 0; i < download_pdf_list.length; i++){
   //   downloads.push(downloadPdf(download_pdf_list[i], dest_dir));
   // }
-
   // console.log("------- PDF downloading started -------\n");
   // await Promise.all(downloads).then(value => {
   //   console.log("------- PDF downloading finished -------\n");

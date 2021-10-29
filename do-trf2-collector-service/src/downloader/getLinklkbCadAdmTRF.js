@@ -1,25 +1,30 @@
 const convertDate = require('./convertDate');
-const doAxios1 = require('./doAxios1');
+const axios = require('axios');
 const FormData = require('form-data');
+const fs = require('fs');
+const { promisify } = require('util');
+const stream = require('stream');
+const finished = promisify(stream.finished);
 
 const { SEARCH_PAGE_URL, ORIGIN } = require('../reqParams/urls');
+const { TYPE_OF_PDF, EVENT_TARGETS } = require('../reqParams/name-download')
 
-async function getLinklkbCadAdmTRF(viewState, eventValidation, date) {
-  console.log(convertDate(date))
-  var data = new FormData();
-  data.append('__EVENTTARGET', 'ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$lkbCadAdmTRF');
-  data.append('__EVENTARGUMENT', '');
-  data.append('__LASTFOCUS', '');
-  data.append('__VIEWSTATE', viewState);
-  data.append('__EVENTVALIDATION', eventValidation);
-  data.append('ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$tbxDataEdicoes', convertDate(date));
-  data.append('ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$meeDataInicial_ClientState', '');
-  data.append('ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$OpcaoVisualizacao', 'rbtPDF');
-  data.append('ctl00$ContentPlaceHolder$ctrInicial$OpcaoPesquisa', 'rbtDiario');
+async function getLinklkbCadAdmTRF(viewState, eventValidation, date, dest_dir, index) {
+  var data_form = new FormData();
+  data_form.append('__EVENTTARGET', EVENT_TARGETS[index]);
+  data_form.append('__EVENTARGUMENT', '');
+  data_form.append('__LASTFOCUS', '');
+  data_form.append('__VIEWSTATE', viewState);
+  data_form.append('__EVENTVALIDATION', eventValidation);
+  data_form.append('ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$tbxDataEdicoes', convertDate(date));
+  data_form.append('ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$meeDataInicial_ClientState', '');
+  data_form.append('ctl00$ContentPlaceHolder$ctrInicial$ctrCadernosPorAreaJudicial$OpcaoVisualizacao', 'rbtPDF');
+  data_form.append('ctl00$ContentPlaceHolder$ctrInicial$OpcaoPesquisa', 'rbtDiario');
   
   var config = {
     method: 'post',
     url: SEARCH_PAGE_URL,
+    responseType: 'stream',
     headers: { 
       'Connection': 'keep-alive', 
       'Cache-Control': 'max-age=0', 
@@ -35,11 +40,25 @@ async function getLinklkbCadAdmTRF(viewState, eventValidation, date) {
       'Sec-Fetch-Dest': 'document', 
       'Referer': SEARCH_PAGE_URL, 
       'Accept-Language': 'en-US,en;q=0.9',
-      ...data.getHeaders()
+      ...data_form.getHeaders()
     },
-    data : data
+    data : data_form
   };
-  const response = await doAxios1(config);
-  console.log(response.headers)
+  return new Promise((resolve, reject) => {
+    var parseDate = date.split('-');
+    var pdfName = `CADERNO_${parseDate[2]}${parseDate[1]}${parseDate[0]}_${TYPE_OF_PDF[index]}`;
+    console.log("pdfName", pdfName)
+    axios(config).then(response => {
+      var writeStream = fs.createWriteStream(`${dest_dir}/${pdfName}.pdf`);
+      response.data.pipe(writeStream);
+      finished(writeStream);
+      resolve('Success!')
+    })
+    .catch(err => {
+      console.log('Opps, something went wrong!');
+      resolve('Failed');
+    })
+  })
+  // console.log(response)
 }
 module.exports = getLinklkbCadAdmTRF;

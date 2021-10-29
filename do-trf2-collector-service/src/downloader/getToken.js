@@ -6,10 +6,12 @@ const cheerio = require('cheerio');
 const getLinklkbCadAdmTRF = require('./getLinklkbCadAdmTRF');
 
 const { SEARCH_PAGE_URL, ORIGIN } = require('../reqParams/urls');
+const { ID_LISTS } = require('../reqParams/name-download');
 const convertDate = require('./convertDate');
 
-async function getToken(viewState, eventValidation, dateList, index, pdfList, curDate){
+async function getToken(viewState, eventValidation, dateList, index, curDate, dest_dir){
   if(index >= dateList.length){
+    console.log('finished---------------------')
     return ;
   }
   console.log('Calling getToken function!');
@@ -49,13 +51,17 @@ async function getToken(viewState, eventValidation, dateList, index, pdfList, cu
   };
 
   const response = await doAxios(config);
-  console.log(response)
   const $ = cheerio.load(response);
 
-  if($('#ctl00_ContentPlaceHolder_ctrInicial_ctrCadernosPorAreaJudicial_lkbCadAdmTRF').attr('href') != undefined){
-    // console.log($.html())
-    await getLinklkbCadAdmTRF(viewState, eventValidation, dateList[index])
+  var downloadLists = [];
+
+  for(let i = 0; i < ID_LISTS.length; i++){
+    if($(`#${ID_LISTS[i]}`).attr('href') != undefined){
+      downloadLists.push(await getLinklkbCadAdmTRF(viewState, eventValidation, dateList[index], dest_dir, i));
+    }
   }
+
+  await Promise.all(downloadLists);
   
   var nViewState;
   var nEventValidation;
@@ -70,7 +76,7 @@ async function getToken(viewState, eventValidation, dateList, index, pdfList, cu
   }
   var cDate = convertDate(dateList[index]);
   index++;
-  await getToken(nViewState, nEventValidation, dateList, index, pdfList, cDate);
+  await getToken(nViewState, nEventValidation, dateList, index, cDate, dest_dir);
 
   // return response;
 }

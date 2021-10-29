@@ -56,37 +56,10 @@ async function main( message, dest_dir, callback ) {
   var viewState = getViewState(response);
   var eventValidation = getEventValidation(response);
   var curDate = getDate(response);
-  var pdfList = [];
-  console.log("asdfasdf",curDate)
 
-  await getToken(viewState, eventValidation, dateList, 0, pdfList, curDate);
+  await getToken(viewState, eventValidation, dateList, 0, curDate, dest_dir);
 
-  // await getPdfList(response, 0, download_pdf_list);
-  // const all_pdf_list = getAllPdfList(response);
-
-  // const download_pdf_list = getPdfList(message, all_pdf_list);
-
-  // console.log('Date Ini: ', Date.parse(message.date_ini));
-  // console.log('Date End: ', Date.parse(message.date_end));
-  // // console.log('Download PDF Link: ', download_pdf_list);
-
-  // if(download_pdf_list.length === 0){
-  //   console.log("-------- :( There is no search result. ---------");
-  //   return ;
-  // }
-
-  // const downloads = [];
-
-  // // console.log('This is Pdf link: ', pdf_lists);
-
-  // for(let i = 0; i < download_pdf_list.length; i++){
-  //   downloads.push(downloadPdf(download_pdf_list[i], dest_dir));
-  // }
-  // console.log("------- PDF downloading started -------\n");
-  // await Promise.all(downloads).then(value => {
-  //   console.log("------- PDF downloading finished -------\n");
-  //   callback();
-  // })
+  callback();
 }
 
 async function index( config, message, ambiente ) {
@@ -99,11 +72,10 @@ async function index( config, message, ambiente ) {
   }
 
   await main( message, dest_dir, async () => {
-/*
     const sendJsonData = await upload2aws(dest_dir); // Upload all downloaded PDF files to AWS
 
     for(let i = 0; i < sendJsonData.length; i++){
-      sendJsonData[i]['uf'] = 'TRF1';
+      sendJsonData[i]['uf'] = 'TRF2';
       sendJsonData[i]['search'] = message.search;
     } // Finished to upload.
 
@@ -112,7 +84,7 @@ async function index( config, message, ambiente ) {
 
     producer().catch( err => {
       console.error("erro in producer: ", err);
-    });*/
+    });
   });
   
 }

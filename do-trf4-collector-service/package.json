@@ -1,7 +1,7 @@
 {
-  "name": "do-trf5-collector-service",
+  "name": "do-trf4-collector-service",
   "version": "1.0.0",
-  "description": "Microservice DO - TRF5",
+  "description": "Microservice DO - TRF4",
   "main": "index.js",
   "scripts": {
     "test": "jest",

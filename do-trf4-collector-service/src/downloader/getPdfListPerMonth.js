@@ -10,12 +10,12 @@ function convertDate(date) {
 }
 
 async function getPdfListPerMonth(month, allPdfList, message){
-  console.log("Get PDF List Per Month function called.");
+  console.log("Get PDF List Per Month function called.", month);
 
   var date_ini = new Date(message.date_ini);
   var date_end = new Date(message.date_end);
-  console.log(date_ini);
-  console.log(date_end);
+  // console.log(date_ini);
+  // console.log(date_end);
 
   var data = qs.stringify({
     'edAnteriores': month 

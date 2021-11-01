@@ -1,0 +1,53 @@
+# do-pa-collector-service
+do-pa-collector-service build:
+  extends: .build
+  variables:
+    SERVICE: do-pa-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-pa-collector-service/*"
+
+DEV do-pa-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-pa-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: dev
+    SERVICE: do-pa-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-pa-collector-service/*"
+
+STAGING do-pa-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-pa-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: staging
+    SERVICE: do-pa-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-pa-collector-service/*"
+      when: manual
+
+PROD do-pa-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-pa-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: prod
+    SERVICE: do-pa-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-pa-collector-service/*"
+      when: manual

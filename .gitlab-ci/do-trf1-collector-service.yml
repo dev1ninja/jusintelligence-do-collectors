@@ -16,6 +16,7 @@ DEV do-trf1-collector-service deploy:
     - jusintelligence
   variables:
     NAMESPACE: dev
+    AMBIENTE: dev
     SERVICE: do-trf1-collector-service
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
@@ -30,6 +31,7 @@ STAGING do-trf1-collector-service deploy:
     - jusintelligence
   variables:
     NAMESPACE: staging
+    AMBIENTE: staging
     SERVICE: do-trf1-collector-service
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
@@ -45,6 +47,7 @@ PROD do-trf1-collector-service deploy:
     - jusintelligence
   variables:
     NAMESPACE: prod
+    AMBIENTE: prod
     SERVICE: do-trf1-collector-service
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'

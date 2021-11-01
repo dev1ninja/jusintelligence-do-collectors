@@ -37,7 +37,8 @@ variables:
     - |
       helm upgrade $SERVICE ./deploy/do --namespace $NAMESPACE --install \
       --set image.repository=$REPOSITORY/$SERVICE \
-      --set image.tag=$IMAGE_TAG
+      --set image.tag=$IMAGE_TAG \
+      --set config.ambiente=$AMBIENTE
 
 ### JOB
 include:

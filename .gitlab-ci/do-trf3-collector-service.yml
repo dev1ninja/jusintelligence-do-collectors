@@ -1,0 +1,56 @@
+# do-trf3-collector-service
+do-trf3-collector-service build:
+  extends: .build
+  variables:
+    SERVICE: do-trf3-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-trf3-collector-service/*"
+
+DEV do-trf3-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-trf3-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: dev
+    AMBIENTE: dev
+    SERVICE: do-trf3-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-trf3-collector-service/*"
+
+STAGING do-trf3-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-trf3-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: staging
+    AMBIENTE: staging
+    SERVICE: do-trf3-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-trf3-collector-service/*"
+      when: manual
+
+PROD do-trf3-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-trf3-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: prod
+    AMBIENTE: prod
+    SERVICE: do-trf3-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-trf3-collector-service/*"
+      when: manual

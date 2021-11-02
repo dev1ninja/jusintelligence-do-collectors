@@ -1,0 +1,56 @@
+# do-api-collector-service
+do-api-collector-service build:
+  extends: .build
+  variables:
+    SERVICE: do-api-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-api-collector-service/*"
+
+DEV do-api-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-api-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: dev
+    AMBIENTE: dev
+    SERVICE: do-api-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-api-collector-service/*"
+
+STAGING do-api-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-api-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: staging
+    AMBIENTE: staging
+    SERVICE: do-api-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-api-collector-service/*"
+      when: manual
+
+PROD do-api-collector-service deploy:
+  extends: .deploy
+  needs:
+    - do-api-collector-service build
+  tags:
+    - jusintelligence
+  variables:
+    NAMESPACE: prod
+    AMBIENTE: prod
+    SERVICE: do-api-collector-service
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - "do-api-collector-service/*"
+      when: manual

@@ -26,7 +26,7 @@ async function main( message, dest_dir, callback ) {
   const monthViewState = getViewState(monthRes.data);
   // console.log('Month ViewState: ', monthViewState);
 
-  const pdfRes = await getPdfList(message, downMonthList, monthViewState, firCookie, 0);
+  const pdfRes = await getPdfList(message, downMonthList, monthViewState, firCookie, 0, dest_dir);
 
   // console.log("------- PDF downloading started -------\n", downloads.length);
   // await Promise.all(downloads).then(value => {

@@ -1,15 +1,18 @@
+const cheerio = require('cheerio');
 const qs = require('qs');
 const doAxios = require('./doAxios');
 const getViewState = require('./getViewState');
 const getCookie = require('./getCookie');
+const getLinkId = require('./getLinkId');
+const getDate = require('./getDate');
+const downloadPdf = require('./download-pdf');
 const { SEARCH, ORIGIN, REFERER } = require('../reqParams/urls');
 const { STATE } = require('../reqParams/state-info');
 
-async function getPdfList(message, downMonthList, viewState, cookie, index) {
+async function getPdfList(message, downMonthList, viewState, cookie, index, dest_dir) {
   console.log("Get Pdf List function called: ");
 
   if(index >= downMonthList.length){
-    console.log('------------finished---------------');
     return ;
   }
 
@@ -75,11 +78,31 @@ async function getPdfList(message, downMonthList, viewState, cookie, index) {
 
   const response_100 = await doAxios(config_100);
   console.log('-------------------------------download pdf test---------------------------');
+  var pdfLinkList = [];
+  const $ = cheerio.load(response_100.data);
 
-  
+  $('table').find('tbody > tr').each((idx, elem) => {
+    var date_ini = new Date(message.date_ini);
+    var date_end = new Date(message.date_end);
+    var cur = new Date(getDate($(elem).find('td:nth-child(3)').text()));
 
-  index++;
-  await getPdfList(message, downMonthList, nViewState, cookie, index);
+    if(cur >= date_ini && cur <= date_end){
+      var name = $(elem).find('td:nth-child(1)').text().replace('/', '-');
+      var link = getLinkId($(elem).find('td:nth-child(1)').attr('id'));
+      pdfLinkList.push({'name':name, 'linkId':link});
+    }
+  });
+
+  console.log('Pdf download List: ',pdfLinkList);
+  var downloadList = [];
+  for(let i = 0; i < pdfLinkList.length; i++){
+    downloadList.push(await downloadPdf(pdfLinkList[i], nViewState, cookie.toUpperCase(), dest_dir));
+  }
+  console.log('DownloadList: ', downloadList)
+  await Promise.all(downloadList).then(async (value) => {
+    index++;
+    await getPdfList(message, downMonthList, nViewState, cookie, index, dest_dir);
+  })
 }
 
 module.exports = getPdfList;

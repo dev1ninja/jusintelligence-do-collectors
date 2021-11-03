@@ -1,51 +1,14 @@
 const fs = require('fs');
-const qs = require('qs');
 const getDateList = require('./getDateList');
 const getFirstResponse = require('./getFirstResponse');
 const getViewState = require('./getViewState');
 const getEventValidation = require('./getEventValidation');
 const getDate = require('./getDate');
-const convertDate = require('./convertDate');
-const doAxios = require('./doAxios');
-const downloadPdf = require('./download-pdf');
 const upload2aws = require('../s3bucket/upload');
-const { FILTER_PAGE_URL, SEARCH_PAGE_URL } = require('../reqParams/urls');
 const getToken = require('./getToken');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
-
-// const virtualConsole = new jsdom.VirtualConsole();
-/*
-async function loadSearchQueryPage(){
-  var resourceLoader = new jsdom.ResourceLoader({
-    strictSSL: false
-  })
-  return new Promise(async (resolve, reject) => {
-    JSDOM.fromURL(FILTER_PAGE_URL, {
-      referrer: SEARCH_PAGE_URL,
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
-      includeNodeLocations: true,
-      storageQuota: 10000000,
-      runScripts: 'dangerously',
-      resources: resourceLoader,
-      virtualConsole,
-      cookieJar,
-    }).then(dom => {
-      resolve(dom);
-    }).catch(error => {
-      reject(error);
-    })
-  })
-}
-
-function loadJquery(dom){
-  delete require.cache[require.resolve('jquery')]
-  global.window = dom.window;
-  global.document = dom.window.document;
-  global.$ = require('jquery');
-}
-*/
 async function main( message, dest_dir, callback ) {
 
   const dateList = getDateList(message);

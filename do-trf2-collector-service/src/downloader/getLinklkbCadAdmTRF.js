@@ -59,6 +59,5 @@ async function getLinklkbCadAdmTRF(viewState, eventValidation, date, dest_dir, i
       resolve('Failed');
     })
   })
-  // console.log(response)
 }
 module.exports = getLinklkbCadAdmTRF;

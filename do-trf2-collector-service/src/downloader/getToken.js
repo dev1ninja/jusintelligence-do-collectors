@@ -1,5 +1,4 @@
 const qs = require('qs');
-const fs = require('fs');
 const doAxios = require('./doAxios');
 const calcEveArg = require('./calcEveArg');
 const cheerio = require('cheerio');

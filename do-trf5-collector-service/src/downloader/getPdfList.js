@@ -2,7 +2,6 @@ const cheerio = require('cheerio');
 const qs = require('qs');
 const doAxios = require('./doAxios');
 const getViewState = require('./getViewState');
-const getCookie = require('./getCookie');
 const getLinkId = require('./getLinkId');
 const getDate = require('./getDate');
 const downloadPdf = require('./download-pdf');

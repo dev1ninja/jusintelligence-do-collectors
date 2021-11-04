@@ -83,3 +83,8 @@ affinity: {}
 
 config:
   ambiente: dev
+  virtualService:
+    enabled: false
+    gateways: gw
+    hosts: host1
+    path: /

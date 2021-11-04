@@ -38,7 +38,11 @@ variables:
       helm upgrade $SERVICE ./deploy/do --namespace $NAMESPACE --install \
       --set image.repository=$REPOSITORY/$SERVICE \
       --set image.tag=$IMAGE_TAG \
-      --set config.ambiente=$AMBIENTE
+      --set config.ambiente=$AMBIENTE \
+      --set config.virtualService.enabled=true \
+      --set config.virtualService.gateways=$GATEWAY \
+      --set config.virtualService.hosts=$HOST \
+      --set config.virtualService.path=$PATH
 
 ### JOB
 include:

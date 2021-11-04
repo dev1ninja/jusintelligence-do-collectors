@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ include "pr.fullname" . }}
+  name: {{ include "do.fullname" . }}
 spec:
   gateways:
     - {{ .Values.config.virtualService.gateways }}
@@ -22,7 +22,7 @@ spec:
             prefix: {{ .Values.config.virtualService.path }}
       route:
         - destination:
-            host: {{ include "pr.fullname" . }}
+            host: {{ include "do.fullname" . }}
             port:
               number: {{ .Values.service.port }}
 {{- end }}

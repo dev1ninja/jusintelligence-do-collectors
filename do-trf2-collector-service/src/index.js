@@ -20,7 +20,7 @@ springCloudConfigClient.load({
     consume().catch((err) => {
       console.error("error in consumer: ", err);
     })
-    // const consume = async () => require("./listener/listener-search-url")(config, '{"search": "something", "date_ini": "2021-10-01", "date_end": "2021-10-06"}', ambiente)
+    // const consume = async () => require("./listener/listener-search-url")(config, '{"search": "something", "date_ini": "2021-10-01", "date_end": "2021-10-03"}', ambiente)
     // consume();
     app.listen(port, () =>
       console.log(`App working at http://localhost:${port}`)

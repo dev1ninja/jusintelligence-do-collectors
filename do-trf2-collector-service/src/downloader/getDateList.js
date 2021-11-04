@@ -4,9 +4,7 @@ function getDateList(message){
   var dateList = [];
   for(let i = date_ini; i <= date_end; i += 86400000){
     var date = new Date(i);
-    console.log(date)
     if(date.getDay() != 6 && date.getDay() != 5){
-      console.log(date.getDay())
       dateList.push(date.toISOString().split('T')[0]);
     }
   }

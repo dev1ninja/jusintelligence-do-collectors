@@ -2,7 +2,6 @@ const fs = require('fs');
 const getAllDateList = require('./getAllfDateList');
 const getPdfListPerMonth = require('./getPdfListPerMonth');
 const getSearchDateList = require('./getSearchDateList');
-const doAxios = require('./doAxios');
 const downloadPdf = require('./download-pdf');
 const upload2aws = require('../s3bucket/upload');
 

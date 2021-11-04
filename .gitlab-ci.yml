@@ -39,7 +39,7 @@ variables:
       --set image.repository=$REPOSITORY/$SERVICE \
       --set image.tag=$IMAGE_TAG \
       --set config.ambiente=$AMBIENTE \
-      --set config.virtualService.enabled=true \
+      --set config.virtualService.enabled=$VIRTUAL_SERVICE_ENABLED \
       --set config.virtualService.gateways=$GATEWAY \
       --set config.virtualService.hosts=$HOST \
       --set config.virtualService.path=$PATH

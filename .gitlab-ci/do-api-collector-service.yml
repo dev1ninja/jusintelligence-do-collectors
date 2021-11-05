@@ -18,7 +18,7 @@ DEV do-api-collector-service deploy:
     NAMESPACE: dev
     AMBIENTE: dev
     SERVICE: do-api-collector-service
-    VIRTUAL_SERVICE_ENABLED: true
+    VIRTUAL_SERVICE_ENABLED: "true"
     GATEWAY: alvaro-arilot-org.prod.svc.cluster.local
     HOST: api.dev.do-api-collector-service.dataseed.de
     SERVICE_PATH: /
@@ -37,7 +37,7 @@ STAGING do-api-collector-service deploy:
     NAMESPACE: staging
     AMBIENTE: staging
     SERVICE: do-api-collector-service
-    VIRTUAL_SERVICE_ENABLED: true
+    VIRTUAL_SERVICE_ENABLED: "true"
     GATEWAY: alvaro-arilot-org.prod.svc.cluster.local
     HOST: api.staging.do-api-collector-service.dataseed.de
     SERVICE_PATH: /
@@ -57,7 +57,7 @@ PROD do-api-collector-service deploy:
     NAMESPACE: prod
     AMBIENTE: prod
     SERVICE: do-api-collector-service
-    VIRTUAL_SERVICE_ENABLED: true
+    VIRTUAL_SERVICE_ENABLED: "true"
     GATEWAY: alvaro-arilot-org.prod.svc.cluster.local
     HOST: api.live.do-api-collector-service.dataseed.de
     SERVICE_PATH: /

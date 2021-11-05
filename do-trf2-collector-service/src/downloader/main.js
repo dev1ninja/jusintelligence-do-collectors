@@ -3,7 +3,10 @@ const getDateList = require('./getDateList');
 const getFirstResponse = require('./getFirstResponse');
 const getViewState = require('./getViewState');
 const getEventValidation = require('./getEventValidation');
+const minMonth = require('./minMonth');
+const compareMonth = require('./compareMonth');
 const getDate = require('./getDate');
+const returnViewState = require('./returnViewState');
 const upload2aws = require('../s3bucket/upload');
 const getToken = require('./getToken');
 
@@ -12,17 +15,27 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 async function main( message, dest_dir, callback ) {
 
   const dateList = getDateList(message);
-  console.log(dateList);
+  // console.log(dateList);
 
   const response = await getFirstResponse();
 
   var viewState = getViewState(response);
   var eventValidation = getEventValidation(response);
   var curDate = getDate(response);
+  var temp = curDate.split('/');
+  var nCurDate = `${temp[2]}-${temp[1]}-${temp[0]}`;
 
-  await getToken(viewState, eventValidation, dateList, 0, curDate, dest_dir);
+  if(compareMonth(message.date_ini, nCurDate)){
+    await getToken(viewState, eventValidation, dateList, 0, curDate, dest_dir);
+  } else{
+    const res = await returnViewState(viewState, eventValidation, curDate, minMonth(nCurDate), message.date_ini);
+    // console.log(res)
+    await getToken(res.viewState, res.eventValidation, dateList, 0, curDate, dest_dir);
+  }
 
-  callback();
+  // await getToken(viewState, eventValidation, dateList, 0, curDate, dest_dir);
+
+  // callback();
 }
 
 async function index( config, message, ambiente ) {

@@ -33,9 +33,7 @@ async function main( message, dest_dir, callback ) {
     await getToken(res.viewState, res.eventValidation, dateList, 0, curDate, dest_dir);
   }
 
-  // await getToken(viewState, eventValidation, dateList, 0, curDate, dest_dir);
-
-  // callback();
+  callback();
 }
 
 async function index( config, message, ambiente ) {

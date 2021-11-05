@@ -7,7 +7,7 @@ const calcEveArg = require('./calcEveArg');
 const { SEARCH_PAGE_URL, ORIGIN } = require('../reqParams/urls');
 
 var reObj;
-
+//This function returns previous month's viewstate.
 async function main(viewState, eventValidation, targetV, curDate, initDate) {
 
   var data = qs.stringify({

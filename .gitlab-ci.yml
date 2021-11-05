@@ -42,7 +42,7 @@ variables:
       --set config.virtualService.enabled=$VIRTUAL_SERVICE_ENABLED \
       --set config.virtualService.gateways=$GATEWAY \
       --set config.virtualService.hosts=$HOST \
-      --set config.virtualService.path=$PATH
+      --set config.virtualService.path=$SERVICE_PATH
 
 ### JOB
 include:

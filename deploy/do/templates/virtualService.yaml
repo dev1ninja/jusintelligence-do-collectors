@@ -1,0 +1,28 @@
+{{- if .Values.config.virtualService.enabled | default false}}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "do.fullname" . }}
+spec:
+  gateways:
+    - {{ .Values.config.virtualService.gateways }}
+  hosts:
+    - {{ .Values.config.virtualService.hosts }}
+  http:
+    - match:
+        - uri:
+            prefix: /.well-known/acme-challenge/
+      route:
+        - destination:
+            host: ingress-nginx-ingress-controller.ingress.svc.cluster.local
+            port:
+              number: 80
+    - match:
+       - uri:
+            prefix: {{ .Values.config.virtualService.path }}
+      route:
+        - destination:
+            host: {{ include "do.fullname" . }}
+            port:
+              number: {{ .Values.service.port }}
+{{- end }}

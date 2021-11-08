@@ -29,7 +29,7 @@ function getDownloadDateList(message) {
     return;
   }
 
-  console.log(date_ini, ' : ', date_end)
+  console.log(date_ini, ' : ', date_end);
 
   var downloadDateList = [];
 

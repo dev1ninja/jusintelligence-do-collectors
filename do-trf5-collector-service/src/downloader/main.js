@@ -3,7 +3,6 @@ const getDownloadMonthList = require('./getDownloadMonthList');
 const getFirstResponse = require('./getFirstResponse');
 const getViewState = require('./getViewState');
 const getCookie = require('./getCookie');
-const downloadPdf = require('./download-pdf');
 const upload2aws = require('../s3bucket/upload');
 const getPdfList = require('./getPdfList');
 const getMonthList = require('./getMonthList');
@@ -19,6 +18,7 @@ async function main( message, dest_dir, callback ) {
   console.log('Fir ViewState: ', firViewState);
 
   const firCookie = getCookie(firRes.headers);
+  // fs.writeFileSync('header.txt', JSON.stringify(firRes.headers))
   console.log('Fir Cookie: ', firCookie);
 
   const monthRes = await getMonthList(message, firViewState, firCookie);

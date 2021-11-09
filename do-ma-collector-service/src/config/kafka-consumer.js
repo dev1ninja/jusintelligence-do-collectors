@@ -1,4 +1,4 @@
-const { Kafka } = require("kafkajs")
+const { Kafka } = require("kafkajs");
 
 module.exports = (config, callBackMethod, ambiente) => {
 

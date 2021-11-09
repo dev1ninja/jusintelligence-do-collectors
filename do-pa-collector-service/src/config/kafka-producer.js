@@ -5,7 +5,7 @@ module.exports = ( ambiente, sendJsonData ) => {
 
     var makeMessage = (jsonData) => {
         var newMsg = [];
-        for(var i = 0; i < jsonData.length; i++){
+        for(let i = 0; i < jsonData.length; i++){
             newMsg.push({key: `key${i}`, value: JSON.stringify(jsonData[i])});
         }
         console.log("New Msg-\n", newMsg);

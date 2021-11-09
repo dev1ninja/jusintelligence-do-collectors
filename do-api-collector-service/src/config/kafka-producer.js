@@ -1,5 +1,5 @@
 const springCloudConfigClient = require('cloud-config-client');
-const { Kafka, CompressionTypes, logLevel } = require("kafkajs");
+const { Kafka } = require("kafkajs");
 
 module.exports = ( jsonData, ambiente ) => {
 

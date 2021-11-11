@@ -1,12 +1,14 @@
 const qs = require('qs');
-const doAxios = require('./doAxios');
 const cheerio = require('cheerio');
+const doAxios = require('./doAxios');
 const convertLink = require('./convertLink');
 const { SEARCH_PAGE_URL, ORIGIN_PAGE_URL, SEARCH_QUERY_PAGE } = require('../reqParams/urls');
 
 function convertDate(date) {
+
   var parsed = date.split('/');
   return `${parsed[2]}-${parsed[1]}-${parsed[0]}`;
+
 }
 
 async function getPdfListPerMonth(month, allPdfList, message){
@@ -14,12 +16,11 @@ async function getPdfListPerMonth(month, allPdfList, message){
 
   var date_ini = new Date(message.date_ini);
   var date_end = new Date(message.date_end);
-  // console.log(date_ini);
-  // console.log(date_end);
 
   var data = qs.stringify({
     'edAnteriores': month 
   });
+
   var config = {
     method: 'post',
     url: SEARCH_PAGE_URL,
@@ -53,14 +54,19 @@ async function getPdfListPerMonth(month, allPdfList, message){
   })
 
   var i = 0;
+
   while( i < allPdfList.length ) {
+
     var newDate = new Date(allPdfList[i].key);
+
     if(newDate < date_ini){
+
       allPdfList.splice(i, 1);
-      // console.log("Date Ini: ", newDate)
+
     } else if(newDate > date_end){
+
       allPdfList.splice(i, 1);
-      // console.log("Date End", newDate)
+      
     } else {
       ++i;
     }

@@ -1,13 +1,13 @@
-const { Kafka } = require("kafkajs")
+const { Kafka } = require("kafkajs");
 
 module.exports = (config, callBackMethod, ambiente) => {
 
     console.log("This is config : ", config);
 
-    const clientId = config.get("kafka.groupid")
-    const brokers = [config.get("kafka.broker")]
-    const topic = config.get("kafka.topic")
-    const kafka = new Kafka({ clientId, brokers })
+    const clientId = config.get("kafka.groupid");
+    const brokers = [config.get("kafka.broker")];
+    const topic = config.get("kafka.topic");
+    const kafka = new Kafka({ clientId, brokers });
     let consumer;
     
     consumer = kafka.consumer({ groupId: clientId })

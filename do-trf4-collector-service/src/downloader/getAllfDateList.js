@@ -1,8 +1,9 @@
+const cheerio = require('cheerio');
 const { SEARCH_QUERY_PAGE } = require('../reqParams/urls');
 const doAxios = require('./doAxios');
-const cheerio = require('cheerio');
 
 async function getAllDateList(){
+
   var config = {
     method: 'get',
     url: SEARCH_QUERY_PAGE,
@@ -21,12 +22,17 @@ async function getAllDateList(){
       'Accept-Language': 'en-US,en;q=0.9'
     }
   };
+
   const response = await doAxios(config);
+
   const $ = cheerio.load(response);
+
   var allDateList = [];
+
   $('#divAreaGlobal').find('section > #divAreaGlobalConteudo > #divConteudo > form > select[name=edAnteriores] > option').each((idx, elem) => {
     allDateList.push($(elem).attr('value'));
   })
+  
   return allDateList;
 }
 

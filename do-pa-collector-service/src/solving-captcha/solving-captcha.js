@@ -82,6 +82,7 @@ async function solveCaptcha(page_url, message, ambiente){
           for(let i = 0; i < sendJsonData.length; i++){
             sendJsonData[i]["uf"] = "PA";
             sendJsonData[i]["search"] = message.search;
+            sendJsonData[i]["id"] = message.id;
           }
           const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
           producer().catch( err => {

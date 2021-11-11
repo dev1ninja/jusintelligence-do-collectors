@@ -71,6 +71,7 @@ async function index( config, message, ambiente ) {
     for(let i = 0; i < sendJsonData.length; i++){
       sendJsonData[i]['uf'] = 'TRF1';
       sendJsonData[i]['search'] = message.search;
+      sendJsonData[i]['id'] = message.id;
     } // Finished to upload.
 
     console.log("-----------------------");

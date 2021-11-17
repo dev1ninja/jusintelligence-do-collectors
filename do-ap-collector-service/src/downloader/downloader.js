@@ -80,6 +80,7 @@ async function main(config, message, ambiente ) {
       sendJsonData[i]["uf"] = "AP";
       sendJsonData[i]["search"] = message.search;
       sendJsonData[i]["id"] = message.id;
+      sendJsonData[i]["download_files"] = message.download_files;
     }
     const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
     producer().catch( err => {

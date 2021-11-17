@@ -4,11 +4,8 @@ const fs = require('fs');
 const { DownloaderHelper } = require('node-downloader-helper');
 const upload2aws = require('../s3bucket/upload2aws');
 
-
-const pdf_lists = [];
-
 async function scrapPdf(config, search_url, message, ambiente) {
-
+    const pdf_lists = [];
     console.log('PDF downloading');
 
     await got(search_url).then( response => {

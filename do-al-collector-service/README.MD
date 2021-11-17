@@ -1,6 +1,7 @@
 ####  1 - Execute Apache Kafka
 This is the instructions to execute apache Kafka locally
 
+
 2 - Start kafka with this commands
 ```
 docker network create kafka-net --driver bridge

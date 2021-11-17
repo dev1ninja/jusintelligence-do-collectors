@@ -6,7 +6,7 @@ const doRequest = require('./doRequest');
 const convertLink = require('./convert-link');
 const convertDate = require('./convert-date');
 
-var pdf_lists = []
+var pdf_lists = [];
 var pdf_name = 0;
 
 async function downloadPDFsOfPage(page, cookie, pdf_lists, search_url, message){ //to get the response per page
@@ -95,7 +95,7 @@ async function sendSearchRequest(config, search_url, message, ambiente, callback
   console.log("This is Number of Page: -----------", nPages);
 
   const downloads = [];
-  for(var i = 1; i <= nPages; i ++)
+  for(let i = 1; i <= nPages; i ++)
   {
     downloads.push(downloadPDFsOfPage(i, response.headers['set-cookie'][0], pdf_lists, search_url, message));
   }

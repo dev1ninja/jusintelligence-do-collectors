@@ -55,7 +55,7 @@ async function scrapPdf(config, search_url, message, ambiente) {
                 }
                 const producer = require('../config/kafka-producer')(ambiente, sendJsonData);
                 producer().catch( err => {
-                    console.error("error in producer: ", err)
+                  console.error("error in producer: ", err)
                 })
               });
               return ;
@@ -64,7 +64,7 @@ async function scrapPdf(config, search_url, message, ambiente) {
           }
         });
     }).catch(err => {
-        console.log(err);
+      console.log(err);
     });
 } 
 
